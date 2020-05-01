@@ -41,7 +41,7 @@ class Voiture
     /**
      * @ORM\Column(type="string", length=100)
      */
-    private $typeCarosserie;
+    private $typeCarrosserie;
 
     /**
      * @ORM\Column(type="integer")
@@ -148,14 +148,14 @@ class Voiture
         return $this;
     }
 
-    public function getTypeCarosserie(): ?string
+    public function getTypeCarrosserie(): ?string
     {
-        return $this->typeCarosserie;
+        return $this->typeCarrosserie;
     }
 
-    public function setTypeCarosserie(?string $typeCarosserie): self
+    public function setTypeCarrosserie(?string $typeCarrosserie): self
     {
-        $this->typeCarosserie = $typeCarosserie;
+        $this->typeCarrosserie = $typeCarrosserie;
 
         return $this;
     }

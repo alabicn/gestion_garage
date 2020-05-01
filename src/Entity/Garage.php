@@ -53,10 +53,16 @@ class Garage
      */
     private $vendeurs;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Rendezvous", mappedBy="Garage", orphanRemoval=true)
+     */
+    private $rendezvouses;
+
     public function __construct()
     {
         $this->voitures = new ArrayCollection();
         $this->vendeurs = new ArrayCollection();
+        $this->rendezvouses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -180,6 +186,37 @@ class Garage
             // set the owning side to null (unless already changed)
             if ($vendeur->getGarage() === $this) {
                 $vendeur->setGarage(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Rendezvous[]
+     */
+    public function getRendezvouses(): Collection
+    {
+        return $this->rendezvouses;
+    }
+
+    public function addRendezvouse(Rendezvous $rendezvouse): self
+    {
+        if (!$this->rendezvouses->contains($rendezvouse)) {
+            $this->rendezvouses[] = $rendezvouse;
+            $rendezvouse->setGarage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRendezvouse(Rendezvous $rendezvouse): self
+    {
+        if ($this->rendezvouses->contains($rendezvouse)) {
+            $this->rendezvouses->removeElement($rendezvouse);
+            // set the owning side to null (unless already changed)
+            if ($rendezvouse->getGarage() === $this) {
+                $rendezvouse->setGarage(null);
             }
         }
 
