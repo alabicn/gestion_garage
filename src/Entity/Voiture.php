@@ -64,7 +64,7 @@ class Voiture
     private $alt_photo_principal;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=false)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $etat;
 
