@@ -73,9 +73,26 @@ class Voiture
      */
     private $photo;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Option", mappedBy="voitures")
+     */
+    private $options;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Modele", inversedBy="voitures")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $modele;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Garage", inversedBy="voitures")
+     */
+    private $garage;
+
     public function __construct()
     {
         $this->photo = new ArrayCollection();
+        $this->options = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -230,6 +247,58 @@ class Voiture
                 $photo->setVoiture(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Option[]
+     */
+    public function getOptions(): Collection
+    {
+        return $this->options;
+    }
+
+    public function addOption(Option $option): self
+    {
+        if (!$this->options->contains($option)) {
+            $this->options[] = $option;
+            $option->addVoiture($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOption(Option $option): self
+    {
+        if ($this->options->contains($option)) {
+            $this->options->removeElement($option);
+            $option->removeVoiture($this);
+        }
+
+        return $this;
+    }
+
+    public function getModele(): ?Modele
+    {
+        return $this->modele;
+    }
+
+    public function setModele(?Modele $modele): self
+    {
+        $this->modele = $modele;
+
+        return $this;
+    }
+
+    public function getGarage(): ?Garage
+    {
+        return $this->garage;
+    }
+
+    public function setGarage(?Garage $garage): self
+    {
+        $this->garage = $garage;
 
         return $this;
     }
