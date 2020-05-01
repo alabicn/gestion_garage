@@ -19,27 +19,27 @@ class Garage
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=50)
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=100)
      */
     private $adresse;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=10)
      */
     private $code_postal;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=100)
      */
     private $ville;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=50)
      */
     private $pays;
 
@@ -48,9 +48,15 @@ class Garage
      */
     private $voitures;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Vendeur", mappedBy="garage", orphanRemoval=true)
+     */
+    private $vendeurs;
+
     public function __construct()
     {
         $this->voitures = new ArrayCollection();
+        $this->vendeurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -143,6 +149,37 @@ class Garage
             // set the owning side to null (unless already changed)
             if ($voiture->getGarage() === $this) {
                 $voiture->setGarage(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Vendeur[]
+     */
+    public function getVendeurs(): Collection
+    {
+        return $this->vendeurs;
+    }
+
+    public function addVendeur(Vendeur $vendeur): self
+    {
+        if (!$this->vendeurs->contains($vendeur)) {
+            $this->vendeurs[] = $vendeur;
+            $vendeur->setGarage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVendeur(Vendeur $vendeur): self
+    {
+        if ($this->vendeurs->contains($vendeur)) {
+            $this->vendeurs->removeElement($vendeur);
+            // set the owning side to null (unless already changed)
+            if ($vendeur->getGarage() === $this) {
+                $vendeur->setGarage(null);
             }
         }
 

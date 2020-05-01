@@ -20,23 +20,24 @@ class Option
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=100)
      */
-    private $nom;
+    private $title;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="float", nullable=true)
      */
     private $prix;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Voiture", inversedBy="options")
+     * @ORM\OneToMany(targetEntity="App\Entity\VoitureOption", mappedBy="option", orphanRemoval=true)
      */
-    private $voitures;
+    private $voitureOptions;
 
     public function __construct()
     {
         $this->voitures = new ArrayCollection();
+        $this->voitureOptions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -44,24 +45,24 @@ class Option
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getTitle(): ?string
     {
-        return $this->nom;
+        return $this->title;
     }
 
-    public function setNom(?string $nom): self
+    public function setTitle(?string $title): self
     {
-        $this->nom = $nom;
+        $this->title = $title;
 
         return $this;
     }
 
-    public function getPrix(): ?int
+    public function getPrix(): ?float
     {
         return $this->prix;
     }
 
-    public function setPrix(?int $prix): self
+    public function setPrix(?float $prix): self
     {
         $this->prix = $prix;
 
@@ -69,26 +70,31 @@ class Option
     }
 
     /**
-     * @return Collection|Voiture[]
+     * @return Collection|VoitureOption[]
      */
-    public function getVoitures(): Collection
+    public function getVoitureOptions(): Collection
     {
-        return $this->voitures;
+        return $this->voitureOptions;
     }
 
-    public function addVoiture(Voiture $voiture): self
+    public function addVoitureOption(VoitureOption $voitureOption): self
     {
-        if (!$this->voitures->contains($voiture)) {
-            $this->voitures[] = $voiture;
+        if (!$this->voitureOptions->contains($voitureOption)) {
+            $this->voitureOptions[] = $voitureOption;
+            $voitureOption->setOption($this);
         }
 
         return $this;
     }
 
-    public function removeVoiture(Voiture $voiture): self
+    public function removeVoitureOption(VoitureOption $voitureOption): self
     {
-        if ($this->voitures->contains($voiture)) {
-            $this->voitures->removeElement($voiture);
+        if ($this->voitureOptions->contains($voitureOption)) {
+            $this->voitureOptions->removeElement($voitureOption);
+            // set the owning side to null (unless already changed)
+            if ($voitureOption->getOption() === $this) {
+                $voitureOption->setOption(null);
+            }
         }
 
         return $this;
