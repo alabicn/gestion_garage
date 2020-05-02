@@ -23,6 +23,8 @@ final class Version20200502132125 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE vendeur ADD genre VARCHAR(5) NOT NULL');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_1D1C63B3E7927C74 ON utilisateur (email)');
+        $this->addSql('ALTER TABLE garage ADD numero_telephone VARCHAR(25) DEFAULT NULL');
     }
 
     public function down(Schema $schema) : void
