@@ -22,6 +22,11 @@ class Garage
      * @ORM\Column(type="string", length=50)
      */
     private $nom;
+    
+    /**
+     * @ORM\Column(type="string", length=25, nullable=true)
+     */
+    private $numeroTelephone;
 
     /**
      * @ORM\Column(type="string", length=100)
@@ -219,6 +224,18 @@ class Garage
                 $rendezvouse->setGarage(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNumeroTelephone(): ?string
+    {
+        return $this->numeroTelephone;
+    }
+
+    public function setNumeroTelephone(?string $numeroTelephone): self
+    {
+        $this->numeroTelephone = $numeroTelephone;
 
         return $this;
     }

@@ -37,6 +37,11 @@ class Vendeur extends Utilisateur
      */
     private $rendezvouses;
 
+    /**
+     * @ORM\Column(type="string", length=5)
+     */
+    private $genre;
+
     public function __construct()
     {
         $this->rendezvouses = new ArrayCollection();
@@ -122,6 +127,18 @@ class Vendeur extends Utilisateur
                 $rendezvouse->setVendeur(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getGenre(): ?string
+    {
+        return $this->genre;
+    }
+
+    public function setGenre(string $genre): self
+    {
+        $this->genre = $genre;
 
         return $this;
     }
