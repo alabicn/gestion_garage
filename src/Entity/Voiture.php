@@ -24,9 +24,9 @@ class Voiture
     private $immatriculation;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="date")
      */
-    private $date_fabrication;
+    private $dateFabrication;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -36,35 +36,35 @@ class Voiture
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $est_vendue;
+    private $estVendue;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=100)
      */
-    private $type_carosserie;
+    private $typeCarrosserie;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer")
      */
-    private $nb_portes;
+    private $nbPortes;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="float", nullable=true)
      */
     private $prix;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $src_photo_principal;
+    private $srcPhotoPrincipal;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $alt_photo_principal;
+    private $altPhotoPrincipal;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $etat;
 
@@ -73,9 +73,26 @@ class Voiture
      */
     private $photo;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Modele", inversedBy="voitures")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $modele;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Garage", inversedBy="voitures")
+     */
+    private $garage;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\VoitureOption", mappedBy="voiture", orphanRemoval=true, cascade={"persist"})
+     */
+    private $voitureOptions;
+
     public function __construct()
     {
         $this->photo = new ArrayCollection();
+        $this->voitureOptions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -97,12 +114,12 @@ class Voiture
 
     public function getDateFabrication(): ?\DateTimeInterface
     {
-        return $this->date_fabrication;
+        return $this->dateFabrication;
     }
 
-    public function setDateFabrication(?\DateTimeInterface $date_fabrication): self
+    public function setDateFabrication(?\DateTimeInterface $dateFabrication): self
     {
-        $this->date_fabrication = $date_fabrication;
+        $this->dateFabrication = $dateFabrication;
 
         return $this;
     }
@@ -121,46 +138,46 @@ class Voiture
 
     public function getEstVendue(): ?\DateTimeInterface
     {
-        return $this->est_vendue;
+        return $this->estVendue;
     }
 
-    public function setEstVendue(?\DateTimeInterface $est_vendue): self
+    public function setEstVendue(?\DateTimeInterface $estVendue): self
     {
-        $this->est_vendue = $est_vendue;
+        $this->estVendue = $estVendue;
 
         return $this;
     }
 
-    public function getTypeCarosserie(): ?string
+    public function getTypeCarrosserie(): ?string
     {
-        return $this->type_carosserie;
+        return $this->typeCarrosserie;
     }
 
-    public function setTypeCarosserie(?string $type_carosserie): self
+    public function setTypeCarrosserie(?string $typeCarrosserie): self
     {
-        $this->type_carosserie = $type_carosserie;
+        $this->typeCarrosserie = $typeCarrosserie;
 
         return $this;
     }
 
     public function getNbPortes(): ?int
     {
-        return $this->nb_portes;
+        return $this->nbPortes;
     }
 
-    public function setNbPortes(?int $nb_portes): self
+    public function setNbPortes(?int $nbPortes): self
     {
-        $this->nb_portes = $nb_portes;
+        $this->nbPortes = $nbPortes;
 
         return $this;
     }
 
-    public function getPrix(): ?int
+    public function getPrix(): ?float
     {
         return $this->prix;
     }
 
-    public function setPrix(?int $prix): self
+    public function setPrix(?float $prix): self
     {
         $this->prix = $prix;
 
@@ -169,24 +186,24 @@ class Voiture
 
     public function getSrcPhotoPrincipal(): ?string
     {
-        return $this->src_photo_principal;
+        return $this->srcPhotoPrincipal;
     }
 
-    public function setSrcPhotoPrincipal(?string $src_photo_principal): self
+    public function setSrcPhotoPrincipal(?string $srcPhotoPrincipal): self
     {
-        $this->src_photo_principal = $src_photo_principal;
+        $this->srcPhotoPrincipal = $srcPhotoPrincipal;
 
         return $this;
     }
 
     public function getAltPhotoPrincipal(): ?string
     {
-        return $this->alt_photo_principal;
+        return $this->altPhotoPrincipal;
     }
 
-    public function setAltPhotoPrincipal(?string $alt_photo_principal): self
+    public function setAltPhotoPrincipal(?string $altPhotoPrincipal): self
     {
-        $this->alt_photo_principal = $alt_photo_principal;
+        $this->altPhotoPrincipal = $altPhotoPrincipal;
 
         return $this;
     }
@@ -228,6 +245,61 @@ class Voiture
             // set the owning side to null (unless already changed)
             if ($photo->getVoiture() === $this) {
                 $photo->setVoiture(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getModele(): ?Modele
+    {
+        return $this->modele;
+    }
+
+    public function setModele(?Modele $modele): self
+    {
+        $this->modele = $modele;
+
+        return $this;
+    }
+
+    public function getGarage(): ?Garage
+    {
+        return $this->garage;
+    }
+
+    public function setGarage(?Garage $garage): self
+    {
+        $this->garage = $garage;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|VoitureOption[]
+     */
+    public function getVoitureOptions(): Collection
+    {
+        return $this->voitureOptions;
+    }
+
+    public function addVoitureOption(VoitureOption $voitureOption): self
+    {
+        if (!$this->voitureOptions->contains($voitureOption)) {
+            $this->voitureOptions[] = $voitureOption;
+            $voitureOption->setVoiture($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVoitureOption(VoitureOption $voitureOption): self
+    {
+        if ($this->voitureOptions->contains($voitureOption)) {
+            $this->voitureOptions->removeElement($voitureOption);
+            // set the owning side to null (unless already changed)
+            if ($voitureOption->getVoiture() === $this) {
+                $voitureOption->setVoiture(null);
             }
         }
 
