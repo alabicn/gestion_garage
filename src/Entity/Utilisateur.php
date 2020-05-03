@@ -35,6 +35,11 @@ class Utilisateur implements UserInterface
     private $email;
 
     /**
+     * @ORM\Column(type="string", length=60)
+     */
+    private $pseudo;
+    
+    /**
      * @ORM\Column(type="json")
      */
     private $roles = [];
@@ -45,10 +50,6 @@ class Utilisateur implements UserInterface
      */
     private $password;
 
-    /**
-     * @ORM\Column(type="string", length=60)
-     */
-    private $pseudo;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -56,7 +57,7 @@ class Utilisateur implements UserInterface
     private $needRGPD;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $estActive;
 
