@@ -16,27 +16,21 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarColor01">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">Page d'accueil<span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Features</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Pricing</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">About</a>
+                        <li class="nav-item">  
+                            <a class="nav-link" href="#">Nos voitures</a>
                         </li>
                     {% if app.user %}
                         <li class="nav-item">  
-                            <a class="nav-link" href="#">Vos véhicules</a>
-                        </li>
-                        <li class="nav-item">  
-                            <a class="nav-link" href="#">Ajouter un véhicule</a>
+                            <a class="nav-link" href="#">Ajouter une voiture</a>
                         </li>
                         <li class="nav-item">  
                             <a class="nav-link" href="#">Mon espace</a>
+                        </li>
+                        <li class="nav-item">  
+                            <a class="nav-link" href="{{path('add_marque')}}">Ajout de la nouvelle marque</a>
+                        </li>
+                        <li class="nav-item">  
+                            <a class="nav-link" href="{{path('add_modele')}}">Ajout du nouveau modèle</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav navbar-right">
@@ -48,7 +42,7 @@
                     </ul>
                     <ul class="navbar-nav navbar-right">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Connexion</a>
+                            <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
                         </li>
                         <li class="nav-item">  
                             <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
@@ -62,6 +56,20 @@
                     </form>
                 </div>
             </nav>
+            <section id="messages">
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-dismissible alert-success">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Information !</strong> {{message}}
+                    </div>
+                {% endfor %}
+                {% for message in app.flashes('error') %}
+                    <div class="alert alert-dismissible alert-danger">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Attention ! </strong><span>{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </section>
             <main class="container">
                 {% block body %}{% endblock %}
             </main>
