@@ -1,0 +1,5 @@
+gestionModele = {};
+
+gestionModele.start = function() {
+
+}

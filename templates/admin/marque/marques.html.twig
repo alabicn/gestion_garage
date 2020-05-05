@@ -1,0 +1,11 @@
+{% extends 'modeleListeEdition.html.twig' %}
+{% block title %}{{title}}{% endblock %}
+{% block editElem %}
+{% if title is defined %}
+        <h1 class="page__title">{{title}}</h1>
+    {% else %}
+        <h1>Header</h1>
+    {% endif %}
+{{ form(addMarqueForm) }}
+
+{% endblock %}

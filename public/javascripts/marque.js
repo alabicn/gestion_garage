@@ -1,0 +1,5 @@
+gestionMarque = {};
+
+gestionMarque.start = function() {
+
+}
