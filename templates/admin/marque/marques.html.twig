@@ -1,11 +1,30 @@
-{% extends 'modeleListeEdition.html.twig' %}
+{% extends 'base.html.twig' %}
 {% block title %}{{title}}{% endblock %}
-{% block editElem %}
+{% block body %}
 {% if title is defined %}
         <h1 class="page__title">{{title}}</h1>
     {% else %}
         <h1>Header</h1>
     {% endif %}
-{{ form(addMarqueForm) }}
+<table class="table table-hover">
+  <thead>
+    <tr class="table-primary">
+      <th scope="col"><strong>&#8470;</strong></th>
+      <th scope="col"><strong>Nom</strong></th>
+      <th scope="col"><strong></strong></th>
+    </tr>
+  </thead>
+  <tbody>
+{% set increment = 0 %}
+{% for marque in marques %}
+{% set increment = increment + 1 %}
+    <tr class="table-active">
+      <th scope="row">{{ increment }}</th>
+      <td>{{ marque.nom }}</td>
+      <td><button type="button" class="btn btn-danger btn-sm">Suprimmer ?</button></td>
+    </tr>
+{% endfor %}
+  </tbody>
+</table>   
 
 {% endblock %}

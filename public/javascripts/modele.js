@@ -1,5 +1,0 @@
-gestionModele = {};
-
-gestionModele.start = function() {
-
-}

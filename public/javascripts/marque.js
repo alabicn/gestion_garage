@@ -1,5 +1,0 @@
-gestionMarque = {};
-
-gestionMarque.start = function() {
-
-}
