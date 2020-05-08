@@ -1,30 +1,76 @@
 {% extends 'base.html.twig' %}
 {% block title %}{{title}}{% endblock %}
 {% block body %}
-{% if title is defined %}
-        <h1 class="page__title">{{title}}</h1>
-    {% else %}
-        <h1>Header</h1>
-    {% endif %}
-<table class="table table-hover">
-  <thead>
-    <tr class="table-primary">
-      <th scope="col"><strong>&#8470;</strong></th>
-      <th scope="col"><strong>Nom</strong></th>
-      <th scope="col"><strong></strong></th>
-    </tr>
-  </thead>
-  <tbody>
-{% set increment = 0 %}
-{% for marque in marques %}
-{% set increment = increment + 1 %}
-    <tr class="table-active">
-      <th scope="row">{{ increment }}</th>
-      <td>{{ marque.nom }}</td>
-      <td><button type="button" class="btn btn-danger btn-sm">Suprimmer ?</button></td>
-    </tr>
-{% endfor %}
-  </tbody>
-</table>   
+  <div class="d-flex bd-highlight">
+    <div class="p-2 w-100 bd-highlight">
+      <h1>{{title}}</h1>
+    </div>
+    <div class="p-2 flex-shrink-1 bd-highlight"><a href="{{ path('marque_add') }}" class="btn btn-outline-primary" role="button">Nouvelle marque</a></div>
+  </div>
+  {% if marques is defined and marques|length > 0 %}
+    <table class="table table-hover">
+      <thead>
+        <tr class="table-primary">
+          <th scope="col" width="10%"><strong>&#8470;</strong></th>
+          <th scope="col"><strong>Nom</strong></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+    {% set increment = 0 %}
+    {% for marque in marques %}
+    {% set increment = increment + 1 %}
+        <tr class="table-active">
+          <th scope="row" class="align-middle" width="10%">{{ increment }}</th>
+          <td class="align-middle">{{ marque.nom }}</td>
+          <td width="20%"><a href="{{ path('marque_edit', {'id': marque.id}) }}" role="button" class="btn btn-outline-success">Modifier ?</a></td>
+        </tr>
+    {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}  
+{% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+  <script>
 
+  var obj1 = {
+  name: "Sara",
+  age: 15
+};
+
+  var obj2 = {
+  name: "Sara",
+  age: 16
+};
+
+var arr = [];
+
+arr.push(obj1, obj2);
+
+var grep = $.grep(arr, function (element, index) {
+    return element.age == 15;
+});
+
+function findObject(objName) {
+  let arrP =  $.grep(arr, function(n, i) {
+    return n.name == objName;
+  });
+
+  for (var i = 0, len = arrP.length; i < len; i++) {
+    return arrP[i];
+  };
+};
+
+var sara = findObject('Sara');
+
+    console.log(sara);
+
+    console.log('nemanja');
+    //console.log(obj1);
+    //console.log(obj2);
+    console.log(arr);
+    console.log(grep);
+
+  </script>
 {% endblock %}

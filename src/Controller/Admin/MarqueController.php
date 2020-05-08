@@ -19,8 +19,8 @@ class MarqueController extends AbstractController
      /**
      * @Route("/marques", name="marques")
      */
-    public function indexAction(Request $obj_request, EntityManagerInterface $em)
-    {
+    public function indexAction(EntityManagerInterface $em, Security $security)
+    {            
         $arr_marques = $em->getRepository(Marque::class)->findAll();
 
         uasort($arr_marques, function($a, $b) {
@@ -34,9 +34,9 @@ class MarqueController extends AbstractController
     }
 
     /**
-     * @Route("/marque/save", name="marque_save")
+     * @Route("/marque/add", name="marque_add")
      */
-    public function saveAction()
+    public function addAction(Request $obj_request)
     {
         $obj_marque = new Marque();
         $form = $this->createForm(MarqueFormType::class, $obj_marque);
@@ -44,24 +44,42 @@ class MarqueController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             // on cherche le manager
-            $manager = $this->getDoctrine()->getManager();
+            $em = $this->getDoctrine()->getManager();
             
-            $manager->persist($obj_marque);
-            $manager->flush();
+            $em->persist($obj_marque);
+            $em->flush();
 
             $this->addFlash('success', "Vous avez ajouté la nouvelle marque ".$obj_marque->getNom()." dans votre garage");
             return $this->redirectToRoute('marques');
-        } else {
-            $this->addFlash('error', "Vous ne disposez pas des droits requis pour accéder à cette fonctionnalité.");
-            return $this->redirectToRoute('home');
         }
+
+        $array['title'] = "Ajout de la nouvelle marque";
+        $array['addMarqueForm'] = $form->createView();
+
+        return $this->render('admin/marque/addMarque.html.twig', $array);;
     }
 
     /**
-     * @Route("/marque/delete", name="marque_delete")
+     * @Route("/marque/edit/{id}", name="marque_edit")
      */
-    public function deleteAction()
+    public function editAction(Marque $marque, Request $obj_request)
     {
+        $em = $this->getDoctrine()->getManager();
+        $obj_marque = $em->getRepository(Marque::class)->find($marque->getId());
+        $form = $this->createForm(MarqueFormType::class, $obj_marque);
+        $form->handleRequest($obj_request);
 
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $em->flush();
+
+            $this->addFlash('success', "Vos modifications ont bien été enregistrées");
+            return $this->redirectToRoute('marques');
+        }
+
+        $array['title'] = "Modification de la marque".$obj_marque->getNom();
+        $array['editMarqueForm'] = $form->createView();
+
+        return $this->render('admin/marque/editMarque.html.twig', $array);
     }
 }

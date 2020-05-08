@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
         <link rel="stylesheet" href="{{ asset('stylesheets/bootstrap.min.css') }}">
         {% endblock %}
     </head>
@@ -15,22 +16,25 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarColor01">
-                    <ul class="navbar-nav mr-auto">
+                    <ul class="navbar-nav mr-auto nav-pills">
                         <li class="nav-item">  
                             <a class="nav-link" href="#">Nos voitures</a>
                         </li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="true">Espace admin</a>
+                            <div class="dropdown-menu" style="position: absolute; transform: translate3d(0px, 37px, 0px); top: 0px; left: 0px; will-change: transform;" x-placement="bottom-start">
+                                <a class="dropdown-item" href="{{ path('marques') }}">Marques</a>
+                                <a class="dropdown-item" href="#">Modeles</a>
+                                <a class="dropdown-item" href="#">Options</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Vendeurs</a>
+                            </div>
+                        </li>
+                    {% endif %}
                     {% if app.user %}
                         <li class="nav-item">  
-                            <a class="nav-link" href="#">Ajouter une voiture</a>
-                        </li>
-                        <li class="nav-item">  
                             <a class="nav-link" href="#">Mon espace</a>
-                        </li>
-                        <li class="nav-item">  
-                            <a class="nav-link" href="{{path('marques')}}">Ajout de la nouvelle marque</a>
-                        </li>
-                        <li class="nav-item">  
-                            <a class="nav-link" href="">Ajout du nouveau modèle</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav navbar-right">
@@ -70,18 +74,23 @@
                     </div>
                 {% endfor %}
             </section>
-            <main class="container">
+            <main class="jumbotron">
                 {% block body %}{% endblock %}
             </main>
         </div>
-        <footer class="container">
+        <footer class="jumbotron">
             <p class="text-center">&copy 2020 - All Rights Reserved</p>
         </footer>
         {% block javascripts %}
-            <script
-                src="https://code.jquery.com/jquery-3.4.1.min.js"
-                integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-                crossorigin="anonymous"></script>
+            <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+            <script>
+            $(document).ready(function(){
+                $('.dropdown-toggle').click(function () {
+                    
+                    $('.dropdown-menu').toggle();
+                })
+            });
+            </script>
         {% endblock %}
     </body>
 </html>

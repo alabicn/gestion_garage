@@ -22,7 +22,7 @@ class ModeleFormType extends AbstractType
                 'choice_label' => 'nom'
             ])
             ->add('nom', TextType::class)
-            ->add('submit', SubmitType::class)
+            ->add('valider', SubmitType::class)
         ;
     }
 
