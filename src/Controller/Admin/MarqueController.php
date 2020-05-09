@@ -10,8 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 use App\Entity\Marque;
 use App\Form\MarqueFormType;
-use App\Entity\Modele;
-use App\Form\ModeleFormType;
 
 /** @Route("/admin") */
 class MarqueController extends AbstractController
@@ -19,7 +17,7 @@ class MarqueController extends AbstractController
      /**
      * @Route("/marques", name="marques")
      */
-    public function indexAction(EntityManagerInterface $em, Security $security)
+    public function indexAction(EntityManagerInterface $em)
     {            
         $arr_marques = $em->getRepository(Marque::class)->findAll();
 
@@ -77,7 +75,7 @@ class MarqueController extends AbstractController
             return $this->redirectToRoute('marques');
         }
 
-        $array['title'] = "Modification de la marque".$obj_marque->getNom();
+        $array['title'] = "Modification de la marque ".$obj_marque->getNom();
         $array['editMarqueForm'] = $form->createView();
 
         return $this->render('admin/marque/editMarque.html.twig', $array);

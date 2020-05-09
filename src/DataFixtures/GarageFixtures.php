@@ -17,8 +17,8 @@ class GarageFixtures extends Fixture
         $obj_garage_strasbourg = new Garage();
         $obj_garage_strasbourg->setNom("Garage Strasbourg")
                               ->setNumeroTelephone("03 68 98 50 00")
-                              ->setAdresse("1 Parc de l\'Étoile")
-                              ->setCodePostal("67076")
+                              ->setAdresse("1 Parc de l'Étoile")
+                              ->setCodePostal("67000")
                               ->setVille("Strasbourg")
                               ->setPays($str_france);
 

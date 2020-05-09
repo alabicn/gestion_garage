@@ -24,8 +24,9 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="true">Espace admin</a>
                             <div class="dropdown-menu" style="position: absolute; transform: translate3d(0px, 37px, 0px); top: 0px; left: 0px; will-change: transform;" x-placement="bottom-start">
+                                {% if is_granted('ROLE_SUPER_ADMIN') %}<a class="dropdown-item" href="{{ path('garages') }}">Garages</a>{% endif %}
                                 <a class="dropdown-item" href="{{ path('marques') }}">Marques</a>
-                                <a class="dropdown-item" href="#">Modeles</a>
+                                <a class="dropdown-item" href="{{ path('modeles') }}">Modeles</a>
                                 <a class="dropdown-item" href="#">Options</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#">Vendeurs</a>
@@ -62,13 +63,13 @@
             </nav>
             <section id="messages">
                 {% for message in app.flashes('success') %}
-                    <div class="alert alert-dismissible alert-success">
+                    <div class="alert alert-dismissible alert-success text-center">
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>Information !</strong> {{message}}
+                        <strong>Information ! </strong>{{message}}
                     </div>
                 {% endfor %}
                 {% for message in app.flashes('error') %}
-                    <div class="alert alert-dismissible alert-danger">
+                    <div class="alert alert-dismissible alert-danger text-center">
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
                         <strong>Attention ! </strong><span>{{ message }}</span>
                     </div>

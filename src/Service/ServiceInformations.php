@@ -25,4 +25,16 @@ class ServiceInformations {
     {
         return (is_nan($price) || $price == 0 ? '- €' : number_format(round($price, 2), 2, ',', ' ') . ' €');
     }
+
+    /**
+     * Retourne le nom de pays 
+     */
+    public function getAllVilles(){
+
+        $pays = array(
+            "67000"=>"Strasbourg", "68100"=>"Mulhouse", "68000"=>"Colmar", "75000"=>"Paris", "57000"=>"Metz", "67700"=>"Saverne");
+
+        asort($pays); // trier les villes par ordre alphabétique
+        return $pays;
+    }
 }

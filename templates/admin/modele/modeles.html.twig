@@ -1,29 +1,33 @@
 {% extends 'base.html.twig' %}
-{% block title %}{{title}}{% endblock %}
+
+{% block title %}{{ title }}{% endblock %}
+
 {% block body %}
   <div class="d-flex bd-highlight">
     <div class="p-2 w-100 bd-highlight">
       <h1>{{title}}</h1>
     </div>
-    <div class="p-2 flex-shrink-1 bd-highlight"><a href="{{ path('marque_add') }}" class="btn btn-outline-primary" role="button">Nouvelle marque</a></div>
+    <div class="p-2 flex-shrink-1 bd-highlight"><a href="{{ path('modele_add') }}" class="btn btn-outline-primary" role="button">Nouveau modèle</a></div>
   </div>
-  {% if marques is defined and marques|length > 0 %}
+  {% if modeles is defined and modeles|length > 0 %}
     <table class="table table-hover">
       <thead>
         <tr class="table-primary">
           <th scope="col" width="10%"><strong>&#8470;</strong></th>
           <th scope="col"><strong>Marque</strong></th>
+          <th scope="col"><strong>Modèle</strong></th>
           <th></th>
         </tr>
       </thead>
       <tbody>
     {% set increment = 0 %}
-    {% for marque in marques %}
+    {% for modele in modeles %}
     {% set increment = increment + 1 %}
         <tr class="table-active">
           <th scope="row" class="align-middle" width="10%">{{ increment }}</th>
-          <td class="align-middle">{{ marque.nom }}</td>
-          <td width="20%"><a href="{{ path('marque_edit', {'id': marque.id}) }}" role="button" class="btn btn-outline-success">Modifier ?</a></td>
+          <td class="align-middle">{{ modele.marque.nom }}</td>
+          <td class="align-middle">{{ modele.nom }}</td>
+          <td width="20%"><a href="{{ path('modele_edit', {'id': modele.id}) }}" role="button" class="btn btn-outline-success">Modifier ?</a></td>
         </tr>
     {% endfor %}
       </tbody>

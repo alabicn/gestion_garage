@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+  <div class="d-flex bd-highlight">
+    <div class="p-2 w-100 bd-highlight">
+      <h1>{{title}}</h1>
+    </div>
+    <div class="p-2 flex-shrink-1 bd-highlight"><a href="{{ path('garage_add') }}" class="btn btn-outline-primary" role="button">Nouvelle garage</a></div>
+  </div>
+  {% if garages is defined and garages|length > 0 %}
+    <table class="table table-hover">
+      <thead>
+        <tr class="table-primary">
+          <th scope="col" width="10%"><strong>&#8470;</strong></th>
+          <th scope="col"><strong>Nom</strong></th>
+          <th scope="col"><strong>Numéro de téléphone</strong></th>
+          <th scope="col"><strong>Adresse</strong></th>
+          <th scope="col"><strong>Ville</strong></th>
+          <th scope="col"><strong>Pays</strong></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+    {% set increment = 0 %}
+    {% for garage in garages %}
+    {% set increment = increment + 1 %}
+        <tr class="table-active">
+          <th scope="row" class="align-middle" width="10%">{{ increment }}</th>
+          <td class="align-middle">{{ garage.nom }}</td>
+          <td class="align-middle">{{ garage.numeroTelephone }}</td>
+          <td class="align-middle">{{ garage.adresse }}</td>
+          <td class="align-middle">{{ garage.ville }}</td>
+          <td class="align-middle">{{ garage.pays }}</td>
+          <td width="20%"><a href="{{ path('garage_edit', {'id': garage.id}) }}" role="button" class="btn btn-outline-success">Modifier ?</a></td>
+        </tr>
+    {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}  
+{% endblock %}
