@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block body %}
+    <h1>{{title}}</h1>  
+  {% if voitures is defined and voitures|length > 0 %}
+    <table class="table table-hover">
+      <thead>
+        <tr class="table-primary">
+          <th scope="col" width="10%"><strong>&#8470;</strong></th>
+          <th scope="col"><strong>Modele</strong></th>
+          <th scope="col"><strong>Immatriculation</strong></th>
+          <th scope="col"><strong>Kilometrage</strong></th>
+          <th scope="col"><strong>Type Carrosserie</strong></th>
+          <th scope="col"><strong>Prix</strong></th>
+          <th scope="col"><strong>Date de fabrication</strong></th>
+          <th scope="col"><strong>Nb portes</strong></th>
+          <th scope="col"><strong>Etat</strong></th>
+        </tr>
+      </thead>
+      <tbody>
+    {% set increment = 0 %}
+    {% for voiture in voitures %}
+    {% set increment = increment + 1 %}
+        <tr class="table-active">
+          <th scope="row" class="align-middle" width="10%">{{ increment }}</th>
+          <td class="align-middle">{{ voiture.modele.marque.nom }} {{ voiture.modele.nom }}</td>
+          <td class="align-middle">{{ voiture.immatriculation }}</td>
+          <td class="align-middle">{{ voiture.kilometrage }} km</td>
+          <td class="align-middle">{{ voiture.typeCarrosserie }}</td>
+          <td class="align-middle">{{ voiture.prix|format_price }}</td>
+          <td class="align-middle">{{ voiture.dateFabrication|date('d/m/Y') }}</td>
+          <td class="align-middle">{{ voiture.nbPortes }}</td>
+          <td class="align-middle">{{ voiture.etat }}</td>
+        </tr>
+    {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <h1>Catalogue est vide</h1>  
+  {% endif %}  
+{% endblock %}
