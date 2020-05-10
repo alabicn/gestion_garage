@@ -32,7 +32,8 @@ class GarageFormType extends AbstractType
             ])
             ->add('adresse', TextType::class)
             ->add('ville', ChoiceType::class, [
-                'choices' => $this->sortVilles()
+                'choices' => $this->sortVilles(),
+                'mapped' => false
             ])
             ->add('valider', SubmitType::class)
         ;

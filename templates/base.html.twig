@@ -27,7 +27,7 @@
                                 {% if is_granted('ROLE_SUPER_ADMIN') %}<a class="dropdown-item" href="{{ path('garages') }}">Garages</a>{% endif %}
                                 <a class="dropdown-item" href="{{ path('marques') }}">Marques</a>
                                 <a class="dropdown-item" href="{{ path('modeles') }}">Modeles</a>
-                                <a class="dropdown-item" href="#">Options</a>
+                                <a class="dropdown-item" href="{{ path('options') }}">Options</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#">Vendeurs</a>
                             </div>
@@ -65,7 +65,7 @@
                 {% for message in app.flashes('success') %}
                     <div class="alert alert-dismissible alert-success text-center">
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>Information ! </strong>{{message}}
+                        <strong>Information ! </strong><span>{{ message }}</span>
                     </div>
                 {% endfor %}
                 {% for message in app.flashes('error') %}
@@ -73,6 +73,18 @@
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
                         <strong>Attention ! </strong><span>{{ message }}</span>
                     </div>
+                {% endfor %}
+                {% for message in app.flashes('info') %}
+                    <div class="alert alert-dismissible alert-info text-center">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Information ! </strong><span>{{ message }}</span>
+                    </div>
+                {% endfor %}
+                {% for message in app.flashes('warning') %}
+                <div class="alert alert-dismissible alert-warning text-center">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Attention ! </strong><span>{{ message }}</span>
+                </div>
                 {% endfor %}
             </section>
             <main class="jumbotron">

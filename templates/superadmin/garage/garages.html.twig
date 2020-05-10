@@ -19,7 +19,7 @@
           <th scope="col"><strong>Adresse</strong></th>
           <th scope="col"><strong>Ville</strong></th>
           <th scope="col"><strong>Pays</strong></th>
-          <th></th>
+          <th colspan="2"></th>
         </tr>
       </thead>
       <tbody>
@@ -28,12 +28,21 @@
     {% set increment = increment + 1 %}
         <tr class="table-active">
           <th scope="row" class="align-middle" width="10%">{{ increment }}</th>
+          {% if garage.estFerme == true %}
+          <td class="align-middle">{{ garage.nom }}<div><span class="badge badge-pill badge-danger">Fermée</span></div></td>
+          {% else %}
           <td class="align-middle">{{ garage.nom }}</td>
+          {% endif %}
           <td class="align-middle">{{ garage.numeroTelephone }}</td>
           <td class="align-middle">{{ garage.adresse }}</td>
           <td class="align-middle">{{ garage.ville }}</td>
           <td class="align-middle">{{ garage.pays }}</td>
-          <td width="20%"><a href="{{ path('garage_edit', {'id': garage.id}) }}" role="button" class="btn btn-outline-success">Modifier ?</a></td>
+          <td width="10%"><a href="{{ path('garage_edit', {'id': garage.id}) }}" role="button" class="btn btn-outline-success">Modifier ?</a></td>
+        {% if garage.estFerme == true %}
+          <td width="10%"><a href="{{ path('garage_open', {'id': garage.id}) }}" role="button" class="btn btn-outline-info">Ouvrir ?</a></td>
+        {% else %}
+          <td width="10%"><a href="{{ path('garage_close', {'id': garage.id}) }}" role="button" class="btn btn-outline-danger">Fermer ?</a></td>
+        {% endif %}
         </tr>
     {% endfor %}
       </tbody>

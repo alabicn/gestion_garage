@@ -12,7 +12,9 @@
         {{ form_row(editGarageForm.nom) }}
         {{ form_row(editGarageForm.numeroTelephone) }}
         {{ form_row(editGarageForm.adresse) }}
+        <div hidden>
         {{ form_row(editGarageForm.ville, {'disabled': 'true'}) }}
+        </div>
     {{ form_end(editGarageForm) }}
 </div>
 

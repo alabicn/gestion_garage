@@ -50,9 +50,10 @@ class GarageController extends AbstractController
             $str_ville = $ville[0];
             $str_codePostal = substr($ville[1], 0, -1);
 
-            $obj_garage->setVille($str_ville);
-            $obj_garage->setCodePostal($str_codePostal);
-            $obj_garage->setPays("France");
+            $obj_garage->setVille(null)
+                       ->setCodePostal($str_codePostal)
+                       ->setPays("France")
+                       ->setEstFerme(false);
 
             
             $em->persist($obj_garage);
@@ -78,9 +79,7 @@ class GarageController extends AbstractController
         $form = $this->createForm(GarageFormType::class, $obj_garage);
         $form->handleRequest($obj_request);
 
-        $ville = clone $garage->getVille();
         if ($form->isSubmitted() && $form->isValid()) {
-            $obj_garage->setVille($ville);
 
             $em->persist($obj_garage);
             $em->flush();
@@ -93,5 +92,41 @@ class GarageController extends AbstractController
         $array['editGarageForm'] = $form->createView();
 
         return $this->render('superadmin/garage/editGarage.html.twig', $array);
+    }
+
+    /**
+     * @Route("/garage/open/{id}", name="garage_open")
+     */
+    public function openAction(Garage $garage)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $obj_garage = $em->getRepository(Garage::class)->find($garage->getId());
+
+        $obj_garage->setEstFerme(false);
+
+        $em->persist($obj_garage);
+        $em->flush();
+
+        $this->addFlash('info', $obj_garage->getNom()." est maintenant ouverte");
+
+        return $this->redirectToRoute('garages');
+    }
+
+    /**
+     * @Route("/garage/close/{id}", name="garage_close")
+     */
+    public function closeAction(Garage $garage)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $obj_garage = $em->getRepository(Garage::class)->find($garage->getId());
+
+        $obj_garage->setEstFerme(true);
+
+        $em->persist($obj_garage);
+        $em->flush();
+
+        $this->addFlash('warning', $obj_garage->getNom()." est maintenant fermée");
+
+        return $this->redirectToRoute('garages');
     }
 }

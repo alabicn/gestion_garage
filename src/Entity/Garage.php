@@ -63,6 +63,11 @@ class Garage
      */
     private $rendezvouses;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $estFerme;
+
     public function __construct()
     {
         $this->voitures = new ArrayCollection();
@@ -236,6 +241,18 @@ class Garage
     public function setNumeroTelephone(?string $numeroTelephone): self
     {
         $this->numeroTelephone = $numeroTelephone;
+
+        return $this;
+    }
+
+    public function getEstFerme(): ?bool
+    {
+        return $this->estFerme;
+    }
+
+    public function setEstFerme(?bool $estFerme): self
+    {
+        $this->estFerme = $estFerme;
 
         return $this;
     }
