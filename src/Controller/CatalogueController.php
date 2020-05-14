@@ -15,30 +15,51 @@ use App\Entity\Modele;
 use App\Entity\Garage; 
 use App\Form\RechercheVoitureFormType;
 
+use Knp\Component\Pager\PaginatorInterface;
+
 class CatalogueController extends AbstractController
 {
     /**
      * @Route("/catalogue", name="catalogue")
      */
-    public function index(EntityManagerInterface $em)
+    public function index(EntityManagerInterface $em, PaginatorInterface $paginator, Request $obj_request)
     {
-        $arr_voitures = $em->getRepository(Voiture::class)->findAll();
+        $queryBuilder = $em->getRepository(Voiture::class)->getWithSearchQueryBuilder();
 
-        $array['voitures'] = array_slice($arr_voitures, 40);
+        $pagination = $paginator->paginate(
+            $queryBuilder, /* query NOT result */
+            $obj_request->query->getInt('page', 1)/*page number*/,
+            10/*limit per page*/
+        );
+
+        //$arr_voitures = $em->getRepository(Voiture::class)->findAll();
+
+        //$array['voitures'] = array_slice($arr_voitures, 40);
         $array['title'] = 'Catalogue des voitures';
+        $array['pagination'] = $pagination;
 
+        dump($array);
         return $this->render('catalogue/catalogue.html.twig', $array);
     }
 
     /**
      * @Route("/catalogue/advanced", name="catalogue_advanced")
      */
-    public function rechercheAvance()
+    public function rechercheAvance(Request $obj_request)
     {
         // marques
         $form = $this->createForm(RechercheVoitureFormType::class);
+        $form->handleRequest($obj_request);
 
-        $array['title'] = 'Recherche detailé';
+        if ($form->isSubmitted() && $form->isValid()) {
+            // on cherche le manager
+            $em = $this->getDoctrine()->getManager();
+            
+            dump($form);
+        }
+
+
+        $array['title'] = 'Recherche detaillé';
         $array['rechercheVoiture'] = $form->createView();
 
         dump($array);

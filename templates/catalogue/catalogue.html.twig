@@ -4,7 +4,7 @@
 
 {% block body %}
     <h1>{{title}}</h1>  
-  {% if voitures is defined and voitures|length > 0 %}
+    <h1>({{ pagination.getTotalItemCount }})</h1>
     <table class="table table-hover">
       <thead>
         <tr class="table-primary">
@@ -21,7 +21,7 @@
       </thead>
       <tbody>
     {% set increment = 0 %}
-    {% for voiture in voitures %}
+    {% for voiture in pagination %}
     {% set increment = increment + 1 %}
         <tr class="table-active">
           <th scope="row" class="align-middle" width="10%">{{ increment }}</th>
@@ -37,7 +37,9 @@
     {% endfor %}
       </tbody>
     </table>
-  {% else %}
-    <h1>Catalogue est vide</h1>  
-  {% endif %}  
+    <div class="d-flex">
+      <div class="mx-auto">
+          {{ knp_pagination_render(pagination) }}
+      </div>
+    </div>
 {% endblock %}

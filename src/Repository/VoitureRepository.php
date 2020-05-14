@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Voiture;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * @method Voiture|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,6 +48,15 @@ class VoitureRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getWithSearchQueryBuilder(): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('v');
+
+        return $qb
+            ->orderBy('v.prix', 'ASC')
+        ;
+    } 
 
     public function findVoitureByCriteres($arr_critere, $select=Array())
     {
