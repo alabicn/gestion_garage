@@ -32,12 +32,12 @@ class RechercheVoitureFormType extends AbstractType
                     return $modele->getMarque()->getNom();
                 },
             ])
-            ->add('typeCarrosserie', EntityType::class, [
+            /*->add('typeCarrosserie', EntityType::class, [
                 'class' => Voiture::class,
                 'choice_value' => function ($voiture) {
                     return $voiture->getTypeCarrosserie();
                 },
-            ])
+            ])*/
             ->add('valider', SubmitType::class)
         ;
     }
