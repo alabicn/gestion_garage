@@ -5,11 +5,12 @@ namespace App\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Faker;
 use App\Service\ServiceInformations;
 
 use App\Entity\Vendeur;
 use App\Entity\Garage;
+
+use Faker;
 use Faker\Factory;
 
 class VendeurFixtures extends Fixture

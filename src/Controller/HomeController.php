@@ -15,13 +15,8 @@ class HomeController extends AbstractController
      */
     public function index(ServiceInformations $serviceInformations)
     {
-
-        $string = "ééééééééààààààààIIIII¨¨EEE";
-        //$test = $serviceInformations->replaceAccent($string);
-
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
-            'test' => $string
         ]);
     }
 }

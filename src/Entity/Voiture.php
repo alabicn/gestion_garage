@@ -24,7 +24,7 @@ class Voiture
     private $immatriculation;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      */
     private $dateFabrication;
 
@@ -39,12 +39,12 @@ class Voiture
     private $estVendue;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $typeCarrosserie;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $nbPortes;
 
@@ -88,6 +88,11 @@ class Voiture
      * @ORM\OneToMany(targetEntity="App\Entity\VoitureOption", mappedBy="voiture", orphanRemoval=true, cascade={"persist"})
      */
     private $voitureOptions;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $a_vendre;
 
     public function __construct()
     {
@@ -302,6 +307,18 @@ class Voiture
                 $voitureOption->setVoiture(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAVendre(): ?bool
+    {
+        return $this->a_vendre;
+    }
+
+    public function setAVendre(?bool $a_vendre): self
+    {
+        $this->a_vendre = $a_vendre;
 
         return $this;
     }

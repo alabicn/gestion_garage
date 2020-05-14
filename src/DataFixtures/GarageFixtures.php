@@ -17,10 +17,11 @@ class GarageFixtures extends Fixture
         $obj_garage_strasbourg = new Garage();
         $obj_garage_strasbourg->setNom("Garage Strasbourg")
                               ->setNumeroTelephone("03 68 98 50 00")
-                              ->setAdresse("1 Parc de l\'Étoile")
-                              ->setCodePostal("67076")
+                              ->setAdresse("1 Parc de l'Étoile")
+                              ->setCodePostal("67000")
                               ->setVille("Strasbourg")
-                              ->setPays($str_france);
+                              ->setPays($str_france)
+                              ->setEstFerme(false);
 
         $manager->persist($obj_garage_strasbourg);
         
@@ -30,7 +31,8 @@ class GarageFixtures extends Fixture
                           ->setAdresse("1 Place de la Mairie")
                           ->setCodePostal("68000")
                           ->setVille("Colmar")
-                          ->setPays($str_france); 
+                          ->setPays($str_france)
+                          ->setEstFerme(false); 
 
         $manager->persist($obj_garage_colmar);
 
@@ -40,7 +42,8 @@ class GarageFixtures extends Fixture
                             ->setAdresse("2 Rue Pierre et Marie Curie")
                             ->setCodePostal("68100")
                             ->setVille("Mulhouse")
-                            ->setPays($str_france);
+                            ->setPays($str_france)
+                            ->setEstFerme(false);
 
         $manager->persist($obj_garage_mulhouse);
         
