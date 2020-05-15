@@ -44,7 +44,7 @@ class RechercheVoitureFormType extends AbstractType
                 },
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('garage')
-                              ->where('garage.estFerme = :bool')
+                              ->andWhere('garage.estFerme = :bool')
                               ->setParameter('bool', false);
                 },
                 'expanded' => true,
@@ -53,7 +53,7 @@ class RechercheVoitureFormType extends AbstractType
             ->add('typeCarrosserie', ChoiceType::class, [
                 'choices' => [
                     'Berlin' => 'Berlin',
-                    'Monospace' => 'Bonospace',
+                    'Monospace' => 'Monospace',
                     'Cabriolet' => 'Cabriolet',
                     'Coupé' => 'Coupé',
                 ],

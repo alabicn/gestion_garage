@@ -18,4 +18,26 @@
         </div>
     {{ form_end(rechercheVoiture) }}
 </div>  
+<p></p>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        var voitures = {{ arrVoitures|json_encode|raw }};
+        var obj = JSON.parse(voitures);
+        console.log(obj);
+
+        var ul = $('<ul>').appendTo('p');
+
+        $.each(obj, function(i,item) {
+            ul.append(
+                $(document.createElement('li')).text(obj[i].garage)
+            );
+        });
+
+//$.each(data, function(i, item) {
+    //alert(data[i].PageName);
+//});
+    </script>
 {% endblock %}
