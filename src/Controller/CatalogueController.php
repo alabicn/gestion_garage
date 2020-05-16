@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use App\Service\ServiceInformations;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -19,6 +20,13 @@ use Knp\Component\Pager\PaginatorInterface;
 
 class CatalogueController extends AbstractController
 {
+    private $serviceInformations;
+
+    public function __construct(ServiceInformations $serviceInformations)
+    {
+        $this->serviceInformations = $serviceInformations;
+    }
+
     /**
      * @Route("/catalogue", name="catalogue")
      */
@@ -107,12 +115,11 @@ class CatalogueController extends AbstractController
             $arr_voitures[] = [
                 'modele' => $voiture->getModele()->getMarque()->getNom()." ".$voiture->getModele()->getNom(),
                 'garage' => $voiture->getGarage()->getNom(),
-                'immatriculation' => !is_null($voiture->getImmatriculation()) ? $voiture->getImmatriculation() : "/",
                 'fabrication' => !is_null($voiture->getDateFabrication()) ? $voiture->getDateFabrication()->format('d/m/Y') : "/",
                 'kilometrage' => !is_null($voiture->getKilometrage()) ? number_format($voiture->getKilometrage(), 0, '', ' ')." km" : "/",
                 'carrosserie' => !is_null($voiture->getTypeCarrosserie()) ? $voiture->getTypeCarrosserie() : "/",
                 'portes' => !is_null($voiture->getNbPortes()) ? $voiture->getNbPortes() : "/",
-                'prix' => !is_null($voiture->getPrix()) ? $voiture->getPrix() : "/"
+                'prix' => !is_null($voiture->getPrix()) ? $this->serviceInformations->format_price($voiture->getPrix()) : "/"
             ];
         }
 

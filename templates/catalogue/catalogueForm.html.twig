@@ -18,23 +18,6 @@
         </div>
     {{ form_end(rechercheVoiture) }}
     <div id="table">
-        <!--<table class="table table-hover">
-            <thead>
-                <tr class="table-primary">
-                    <th scope="row">#</th>
-                    <td>Garage</td>
-                    <td>Modele</td>
-                    <td>Date de fabrication</td>
-                    <td>Kilometrage</td>
-                    <td>Nombre de portes</td>
-                    <td>Type de carrosserie</td>
-                    <td>Prix</td>
-                </tr>
-            </thead>
-            <tbody id="content">
-            </tbody>
-        </table>-->
-        <table id="table" align = "center" border="1px"></table> 
     </div>
 </div>  
 {% endblock %}
@@ -42,126 +25,76 @@
     {{ parent() }}
 
     <script>
+
         var voitures = {% if arrVoitures is defined %}{{ arrVoitures|json_encode|raw }}{% else %}[]{% endif %};
         var obj = JSON.parse(voitures);
-        console.log(obj);
-
         var cols = []; 
               
         for (var l = 0; l < obj.length; l++) { 
             for (var k in obj[l]) { 
                 if (cols.indexOf(k) === -1) { 
                         
-                    // Push all keys to the array 
                     cols.push(k); 
                 } 
             } 
         } 
+  
+        var table = document.createElement("table");
+        table.setAttribute("id", "dtBasicExample");
+        table.classList.add("table");
+        table.classList.add("table-hover");
 
-            console.log(cols);
-              
-            // Create a table element 
-            /*var table = document.createElement("table"); 
-              
-            // Create table row tr element of a table 
-            var tr = table.insertRow(-1); 
-              
-            for (var i = 0; i < obj.length; i++) { 
-                  
-                // Create the table header th element 
-                var theader = document.createElement("th"); 
-                theader.innerHTML = cols[i]; 
-                  
-                // Append columnName to the table row 
-                tr.appendChild(theader); 
-            } 
-              
-            // Adding the data to the table 
-            for (var i = 0; i < obj.length; i++) { 
-                  
-                // Create a new row 
-                trow = table.insertRow(-1); 
-                for (var j = 0; j < cols.length; j++) { 
-                    var cell = trow.insertCell(-1); 
-                      
-                    // Inserting the cell at particular place 
-                    cell.innerHTML = obj[i][cols[j]]; 
-                } 
-            } 
-              
-            // Add the newely created table containing json data 
-            var el = document.getElementById("table"); 
-            el.innerHTML = ""; 
-            el.appendChild(table); */
+        var thead = document.createElement("thead");
+        table.appendChild(thead);
+        var tRowH = document.createElement("tr");
+        tRowH.classList.add("table-active");
+        var _th = document.createElement("th");
+        _th.innerHTML = "&#8470;";
+        _th.scope = "col";
+        _th.classList.add("text-center");
 
-            var table = document.createElement("table");
-            table.classList.add("table");
-            table.classList.add("table-hover");
 
-            var thead = document.createElement("thead");
-            table.appendChild(thead);
-            var tRowH = document.createElement("tr");
-            tRowH.classList.add("table-active");
-            var _th = document.createElement("th");
-            _th.innerHTML = "&#8470;";
-            _th.scope = "col";
-            console.log(_th);
-            //console.log(tRow);
-            thead.appendChild(tRowH);
-            tRowH.appendChild(_th);
-            for (var i = 0; i < cols.length; i++) {
-                var th = document.createElement("th");
-                th.scope = "col";
-                th.classList.add("align-middle");
-                th.innerHTML = cols[i];
-                tRowH.appendChild(th);
+        thead.appendChild(tRowH);
+        tRowH.appendChild(_th);
+        for (var i = 0; i < cols.length; i++) {
+            var th = document.createElement("th");
+            th.scope = "col";
+            th.classList.add("text-center");
+            th.innerHTML = cols[i];
+            tRowH.appendChild(th);
+        }
+
+
+        var tbody = document.createElement("tbody");
+        table.appendChild(tbody);
+        var incr = 1;
+        for (var j = 0; j < obj.length; j++) {
+            var tRowB = document.createElement("tr");
+
+            var _td = document.createElement("td");
+            _td.classList.add("text-center");
+            _td.innerHTML = incr;
+
+            tRowB.appendChild(_td);
+            tbody.appendChild(tRowB);
+
+            incr++;
+            for (var v in obj[j]) {
+                var td = document.createElement("td");
+                td.innerHTML = obj[j][v];
+                td.classList.add("text-center");
+                tRowB.appendChild(td);
             }
-            //console.log(tRow);
+        }
 
-            var tbody = document.createElement("tbody");
-            table.appendChild(tbody);
-            var incr = 1;
-            for (var j = 0; j < obj.length; j++) {
-                var tRowB = document.createElement("tr");
-                tRowB.classList.add("table-warning");
+        var el = document.getElementById("table"); 
+        el.innerHTML = ""; 
+        el.appendChild(table);
 
-                var _td = document.createElement("td");
-                _td.innerHTML = incr;
+        $('#dtBasicExample').DataTable({
+            "pagingType": "simple_numbers"
+        });
+        $('.dataTables_lenght-').addClass('bs-Select');
 
-                tRowB.appendChild(_td);
-                tbody.appendChild(tRowB);
-
-                incr++;
-                for (var v in obj[j]) {
-                    var td = document.createElement("td");
-                    td.innerHTML = obj[j][v];
-                    tRowB.appendChild(td);
-                }
-            }
-
-            var el = document.getElementById("table"); 
-            el.innerHTML = ""; 
-            el.appendChild(table);
-            
-            /*
-
-for (x in myObj) {
-  document.getElementById("demo").innerHTML += x + "<br>";
-}            */
-
-        /*var tr = $('tr');
-        tr.addClass('table-active');
-
-        tr.appendTo('#content');
-
-        $.each(obj, function(i,item) {
-            tr.append(
-                $(document.createElement('td')).text(obj[i].garage)
-            );
-        });*/
-
-//$.each(data, function(i, item) {
-    //alert(data[i].PageName);
-//});
     </script>
 {% endblock %}
