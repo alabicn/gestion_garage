@@ -3,9 +3,98 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-  
+<div class="container-sm">  
     <h1>{{title}}</h1>
-    
-    {{ form(rechercheVoiture) }}
-    
+    {{ form_start(rechercheVoiture) }}
+        {{ form_row(rechercheVoiture.modele) }}
+        {{ form_row(rechercheVoiture.garage) }}
+        {{ form_row(rechercheVoiture.typeCarrosserie) }}
+        {{ form_row(rechercheVoiture.nbPortes) }}
+        <div style="display:inline-block; width:25%; float:right;">
+            <div class="d-flex justify-content-between">
+            {{ form_row(rechercheVoiture.reinitialiser) }}
+            {{ form_row(rechercheVoiture.valider) }}
+            </div>
+        </div>
+    {{ form_end(rechercheVoiture) }}
+    <div id="table">
+    </div>
+</div>  
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        var voitures = {% if arrVoitures is defined %}{{ arrVoitures|json_encode|raw }}{% else %}[]{% endif %};
+        var obj = JSON.parse(voitures);
+        var cols = []; 
+              
+        for (var l = 0; l < obj.length; l++) { 
+            for (var k in obj[l]) { 
+                if (cols.indexOf(k) === -1) { 
+                        
+                    cols.push(k); 
+                } 
+            } 
+        } 
+  
+        var table = document.createElement("table");
+        table.setAttribute("id", "dtBasicExample");
+        table.classList.add("table");
+        table.classList.add("table-hover");
+
+        var thead = document.createElement("thead");
+        table.appendChild(thead);
+        var tRowH = document.createElement("tr");
+        tRowH.classList.add("table-active");
+        var _th = document.createElement("th");
+        _th.innerHTML = "&#8470;";
+        _th.scope = "col";
+        _th.classList.add("text-center");
+
+
+        thead.appendChild(tRowH);
+        tRowH.appendChild(_th);
+        for (var i = 0; i < cols.length; i++) {
+            var th = document.createElement("th");
+            th.scope = "col";
+            th.classList.add("text-center");
+            th.innerHTML = cols[i];
+            tRowH.appendChild(th);
+        }
+
+
+        var tbody = document.createElement("tbody");
+        table.appendChild(tbody);
+        var incr = 1;
+        for (var j = 0; j < obj.length; j++) {
+            var tRowB = document.createElement("tr");
+
+            var _td = document.createElement("td");
+            _td.classList.add("text-center");
+            _td.innerHTML = incr;
+
+            tRowB.appendChild(_td);
+            tbody.appendChild(tRowB);
+
+            incr++;
+            for (var v in obj[j]) {
+                var td = document.createElement("td");
+                td.innerHTML = obj[j][v];
+                td.classList.add("text-center");
+                tRowB.appendChild(td);
+            }
+        }
+
+        var el = document.getElementById("table"); 
+        el.innerHTML = ""; 
+        el.appendChild(table);
+
+        $('#dtBasicExample').DataTable({
+            "pagingType": "simple_numbers"
+        });
+        $('.dataTables_lenght-').addClass('bs-Select');
+
+    </script>
 {% endblock %}

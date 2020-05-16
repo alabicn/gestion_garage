@@ -47,4 +47,13 @@ class GarageRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findAllGaragesByStatus($bool): ?array 
+    {
+        $qb = $this->createQueryBuilder('g')
+                   ->andWhere('g.estFerme = :bool')
+                   ->setParameter('bool', $bool);
+        
+        return $qb->getQuery()->getResult();
+    }
 }
