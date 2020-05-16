@@ -105,13 +105,13 @@ class CatalogueController extends AbstractController
         foreach ($voitures as $voiture) {
         
             $arr_voitures[] = [
-                'garage' => $voiture->getGarage()->getNom(),
                 'modele' => $voiture->getModele()->getMarque()->getNom()." ".$voiture->getModele()->getNom(),
+                'garage' => $voiture->getGarage()->getNom(),
                 'immatriculation' => !is_null($voiture->getImmatriculation()) ? $voiture->getImmatriculation() : "/",
-                'date_fabrication' => !is_null($voiture->getDateFabrication()) ? $voiture->getDateFabrication() : "/",
+                'fabrication' => !is_null($voiture->getDateFabrication()) ? $voiture->getDateFabrication()->format('d/m/Y') : "/",
                 'kilometrage' => !is_null($voiture->getKilometrage()) ? number_format($voiture->getKilometrage(), 0, '', ' ')." km" : "/",
-                'typeCarrosserie' => !is_null($voiture->getTypeCarrosserie()) ? $voiture->getTypeCarrosserie() : "/",
-                'nbPortes' => !is_null($voiture->getNbPortes()) ? $voiture->getNbPortes() : "/",
+                'carrosserie' => !is_null($voiture->getTypeCarrosserie()) ? $voiture->getTypeCarrosserie() : "/",
+                'portes' => !is_null($voiture->getNbPortes()) ? $voiture->getNbPortes() : "/",
                 'prix' => !is_null($voiture->getPrix()) ? $voiture->getPrix() : "/"
             ];
         }
