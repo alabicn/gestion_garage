@@ -17,7 +17,7 @@ class OptionFixtures extends Fixture
             // création des options
             $obj_option = new Option();
             $obj_option->setTitle($option)
-                       ->setPrix(mt_rand(7451, 28911) / 100);
+                       ->setPrix(rand(7451, 28911) / 100);
 
             $manager->persist($obj_option);
         }

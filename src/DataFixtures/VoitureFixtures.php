@@ -18,24 +18,26 @@ class VoitureFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         $faker = Faker\Factory::create('fr_FR');
-        $carrosserie = ['Berline', 'Cabriolet', 'Coupé', 'Monospace'];
+        $carrosseries = ['Berline', 'Cabriolét'];
+        $carburants = ['Diesel', 'Essence', 'Hybride'];
+        $bdv = ['Manuelle', 'Automatique'];
 
         // On cherche les modeles créés
         $arr_obj_modeles = $manager->getRepository(Modele::class)->findAll();
         foreach ($arr_obj_modeles as $obj_modele) {
-            for ($i = 0;$i <= mt_rand(7, 10);$i++) {
+            for ($i = 0;$i <= rand(7, 10);$i++) {
 
                 $obj_voiture = new Voiture();
-                $obj_voiture->setImmatriculation(chr(rand(65,90)).chr(mt_rand(65,90))."-".mt_rand(100,999)."-".chr(mt_rand(65,90)).chr(mt_rand(65,90)))
+                $obj_voiture->setImmatriculation(chr(rand(65,90)).chr(rand(65,90))."-".rand(100,999)."-".chr(rand(65,90)).chr(rand(65,90)))
                             ->setDateFabrication($faker->dateTimeBetween('-10 years', '-2 years', 'Europe/Paris'))
-                            ->setKilometrage(mt_rand(50000,200000))
+                            ->setKilometrage(rand(50000,200000))
                             ->setAVendre(true)
-                            ->setTypeCarrosserie($carrosserie[mt_rand(0,3)])
-                            ->setNbPortes(5)
-                            ->setPrix(mt_rand(1000000, 10000000) / 100)
-                            ->setEtat('Bon état')
+                            ->setTypeCarrosserie($carrosseries[rand(0,1)])
+                            ->setCarburant($carburants[rand(0,2)])
+                            ->setPrix(rand(1000000, 10000000) / 100)
+                            ->setBoiteDeVitesse($bdv[rand(0,1)])
                             ->setModele($obj_modele)
-                            ->setGarage($manager->getRepository(Garage::class)->find(mt_rand(1,3)));
+                            ->setGarage($manager->getRepository(Garage::class)->find(rand(1,3)));
     
                 $manager->persist($obj_voiture);
             }

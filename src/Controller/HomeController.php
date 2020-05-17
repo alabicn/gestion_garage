@@ -8,6 +8,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\DependencyInjection\Container;
 use App\Service\ServiceInformations;
 
+use App\Entity\Voiture;
+
 class HomeController extends AbstractController
 {
     /**
@@ -15,6 +17,8 @@ class HomeController extends AbstractController
      */
     public function index(ServiceInformations $serviceInformations)
     {
+
+        dump($this->getDoctrine()->getManager()->getRepository(Voiture::class)->findBy(['typeCarrosserie' => "Berline", 'modele' => '208']));
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
         ]);

@@ -5,38 +5,39 @@
 {% block body %}
     <h1>{{title}}</h1>  
     <h1>({{ pagination.getTotalItemCount }})</h1>
-    <table class="table table-hover">
-      <thead>
-        <tr class="table-primary">
-          <th scope="col" width="10%"><strong>&#8470;</strong></th>
-          <th scope="col"><strong>Modele</strong></th>
-          <th scope="col"><strong>Immatriculation</strong></th>
-          <th scope="col"><strong>Kilometrage</strong></th>
-          <th scope="col"><strong>Type Carrosserie</strong></th>
-          <th scope="col"><strong>Prix</strong></th>
-          <th scope="col"><strong>Date de fabrication</strong></th>
-          <th scope="col"><strong>Nb portes</strong></th>
-          <th scope="col"><strong>Etat</strong></th>
-        </tr>
-      </thead>
-      <tbody>
+    <div class="container">    
+      <div class="row">
     {% set increment = 0 %}
     {% for voiture in pagination %}
     {% set increment = increment + 1 %}
-        <tr class="table-active">
-          <th scope="row" class="align-middle" width="10%">{{ increment }}</th>
-          <td class="align-middle">{{ voiture.modele.marque.nom }} {{ voiture.modele.nom }}</td>
-          <td class="align-middle">{{ voiture.immatriculation }}</td>
-          <td class="align-middle">{{ voiture.kilometrage }} km</td>
-          <td class="align-middle">{{ voiture.typeCarrosserie }}</td>
-          <td class="align-middle">{{ voiture.prix|format_price }}</td>
-          <td class="align-middle">{{ voiture.dateFabrication|date('d/m/Y') }}</td>
-          <td class="align-middle">{{ voiture.nbPortes }}</td>
-          <td class="align-middle">{{ voiture.etat }}</td>
-        </tr>
+        <div class="col-sm-4">
+          <div class="card mb-3">
+            <h3 class="card-header">{{ voiture.modele.marque.nom }} {{ voiture.modele.nom }}</h3>
+            <div class="card-body">
+              <h5 class="card-title">{{ voiture.typeCarrosserie }}</h5>
+              <h6 class="card-subtitle text-muted">{{ voiture.carburant }}</h6>
+            </div>
+            <img style="height: 200px; width: 100%; display: block;" src={% if voiture.srcPhotoPrincipal is defined and voiture.srcPhotoPrincipal is not null %}"{{ asset('images/' ~ voiture.srcPhotoPrincipal) }}"{% else %}"data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22318%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20318%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_158bd1d28ef%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A16pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_158bd1d28ef%22%3E%3Crect%20width%3D%22318%22%20height%3D%22180%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22129.359375%22%20y%3D%2297.35%22%3EImage%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"{% endif %} alt={% if voiture.altPhotoPrincipal is defined and voiture.altPhotoPrincipal is not null %}"{{ voiture.altPhotoPrincipal }}"{% else %}"Card image"{% endif %}>
+            <div class="card-body">
+              <p class="card-text">{{ voiture.garage.nom }}<span class="float-right badge badge-pill badge-success">Disponible</span></p>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">{{ voiture.boiteDeVitesse }}</li>
+              <li class="list-group-item">{{ voiture.nbPortes }} portes</li>
+              <li class="list-group-item">{{ voiture.kilometrage|format_km }}</li>
+              <li class="list-group-item text-success">{{ voiture.prix|format_price }}</li>
+            </ul>
+            <div class="card-body">
+                <a href="{{ path('product_detailed', {'id': voiture.id}) }}" class="card-link"><strong>Plus d'info</strong></a>
+            </div>
+            <div class="card-footer text-muted">
+              Fabriquée en {{ voiture.dateFabrication|date('Y') }}
+            </div>
+          </div>
+        </div>
     {% endfor %}
-      </tbody>
-    </table>
+      </div>
+    </div>
     <div class="d-flex">
       <div class="mx-auto">
           {{ knp_pagination_render(pagination) }}

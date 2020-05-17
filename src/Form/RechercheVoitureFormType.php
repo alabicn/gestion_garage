@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Modele;
+use App\Entity\Marque;
 use App\Entity\Voiture;
 use App\Entity\Garage;
 use Symfony\Component\Form\AbstractType;
@@ -23,18 +23,16 @@ class RechercheVoitureFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('modele', EntityType::class, [
-                'class' => Modele::class,
-                'choice_label' => function ($modele) {
-                    return $modele->getMarque()->getNom().' '.$modele->getNom();
+            ->add('marque', EntityType::class, [
+                'class' => Marque::class,
+                'choice_label' => function ($marque) {
+                    return $marque->getNom();
                 },
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('modele')
-                              ->orderBy('modele.nom', 'ASC');
+                    return $er->createQueryBuilder('marque')
+                              ->orderBy('marque.nom', 'ASC');
                 },
-                'group_by' => function($modele) {                
-                    return $modele->getMarque()->getNom();
-                },
+                'required' => false,
                 'multiple' => true
             ])
             ->add('garage', EntityType::class, [
@@ -56,6 +54,15 @@ class RechercheVoitureFormType extends AbstractType
                     'Monospace' => 'Monospace',
                     'Cabriolet' => 'Cabriolet',
                     'Coupé' => 'Coupé',
+                ],
+                'expanded' => true,
+                'multiple' => true
+            ])
+            ->add('carburant', ChoiceType::class, [
+                'choices' => [
+                    'Diesel' => 'Diesel',
+                    'Essence' => 'Essence',
+                    'Hybride' => 'Hybride',
                 ],
                 'expanded' => true,
                 'multiple' => true

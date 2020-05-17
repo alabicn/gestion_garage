@@ -1,0 +1,5 @@
+UPDATE voiture 
+INNER JOIN modele ON voiture.modele_id = modele.id 
+SET src_photo_principal = "peugeot508_cabriolet.jpg", alt_photo_principal = "peugeot508_cabriolet"
+WHERE voiture.type_carrosserie = "Cabriolét"
+AND modele.nom = "508"
