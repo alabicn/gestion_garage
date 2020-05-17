@@ -43,10 +43,9 @@ class MarqueController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // on cherche le manager
             $em = $this->getDoctrine()->getManager();
+            $marque_exists = count($em->getRepository(Marque::class)->findBy(['nom' => $obj_marque->getNom()])) > 0 ? true : false;
 
-            $nouvelleMarque = $em->getRepository(Marque::class)->findBy(['nom' => $obj_marque->getNom()]);
-
-            if (count($nouvelleMarque) > 0) {
+            if ($marque_exists) {
                 
                 $this->addFlash('error', "Une marque avec ce nom existe déjà.");
                 return $this->redirectToRoute('marque_add');
