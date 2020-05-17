@@ -9,7 +9,6 @@
       <div class="row">
     {% set increment = 0 %}
     {% for voiture in pagination %}
-    {% set increment = increment + 1 %}
         <div class="col-sm-4">
           <div class="card mb-3">
             <h3 class="card-header">{{ voiture.modele.marque.nom }} {{ voiture.modele.nom }}</h3>

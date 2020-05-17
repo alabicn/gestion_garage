@@ -21,6 +21,7 @@ class VoitureFixtures extends Fixture implements DependentFixtureInterface
         $carrosseries = ['Berline', 'Cabriolét'];
         $carburants = ['Diesel', 'Essence', 'Hybride'];
         $bdv = ['Manuelle', 'Automatique'];
+        $nbPortes = [3, 5, 7];
 
         // On cherche les modeles créés
         $arr_obj_modeles = $manager->getRepository(Modele::class)->findAll();
@@ -34,6 +35,7 @@ class VoitureFixtures extends Fixture implements DependentFixtureInterface
                             ->setAVendre(true)
                             ->setTypeCarrosserie($carrosseries[rand(0,1)])
                             ->setCarburant($carburants[rand(0,2)])
+                            ->setnbPortes($nbPortes[rand(0,2)])
                             ->setPrix(rand(1000000, 10000000) / 100)
                             ->setBoiteDeVitesse($bdv[rand(0,1)])
                             ->setModele($obj_modele)
