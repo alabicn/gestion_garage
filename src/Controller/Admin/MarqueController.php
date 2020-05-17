@@ -44,10 +44,7 @@ class MarqueController extends AbstractController
             // on cherche le manager
             $em = $this->getDoctrine()->getManager();
 
-            dump($obj_marque);
-            dump($form);
             $nouvelleMarque = $em->getRepository(Marque::class)->findBy(['nom' => $obj_marque->getNom()]);
-            dump($nouvelleMarque);
 
             if (count($nouvelleMarque) > 0) {
                 
