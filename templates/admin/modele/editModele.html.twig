@@ -9,7 +9,9 @@
         <div class="p-2 flex-shrink-1 bd-highlight"><a href="{{ path('modeles') }}" class="btn btn-outline-primary" role="button"><i class="fas fa-arrow-left"></i></a></div>
     </div>
     {{ form_start(editModeleForm) }}
-        {{ form_row(editModeleForm.marque, {'disabled': 'true'}) }}
+        <div hidden>
+        {{ form_row(editModeleForm.marque) }}
+        </div>
         {{ form_row(editModeleForm.nom) }}
     {{ form_end(editModeleForm) }}
 </div>

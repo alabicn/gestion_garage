@@ -45,15 +45,13 @@ class MarqueController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $marque_exists = count($em->getRepository(Marque::class)->findBy(['nom' => $obj_marque->getNom()])) > 0 ? true : false;
 
-            if ($marque_exists) {
-                
-                $this->addFlash('error', "Une marque avec ce nom existe déjà.");
+            if ($marque_exists) {               
+                $this->addFlash('error', "La marque ".$obj_marque->getNom()." est déjà enregistrée.");
                 return $this->redirectToRoute('marque_add');
             } else {
-                
                 $em->persist($obj_marque);
                 $em->flush();
-                $this->addFlash('success', "Vous avez ajouté la nouvelle marque ".$obj_marque->getNom()." dans votre garage");
+                $this->addFlash('success', "Vous avez ajouté la nouvelle marque ".$obj_marque->getNom()." dans votre garage.");
                 return $this->redirectToRoute('marques');
             }    
         }
@@ -76,10 +74,17 @@ class MarqueController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $em->flush();
-
-            $this->addFlash('success', "Vos modifications ont bien été enregistrées");
-            return $this->redirectToRoute('marques');
+            $marque_exists = count($em->getRepository(Marque::class)->findBy(['nom' => $obj_marque->getNom()])) > 0 ? true : false;
+            
+            if ($marque_exists) {               
+                $this->addFlash('error', "La marque ".$obj_marque->getNom()." est déjà enregistrée.");
+                return $this->redirectToRoute('marque_edit', ['id' => $obj_marque->getId()]);
+            } else {
+                $em->persist($obj_marque);
+                $em->flush();
+                $this->addFlash('success', "Vos modifications ont bien été enregistrées.");
+                return $this->redirectToRoute('marques');
+            }
         }
 
         $array['title'] = "Modification de la marque ".$obj_marque->getNom();

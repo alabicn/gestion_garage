@@ -46,12 +46,17 @@ class ModeleController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // on cherche le manager
             $em = $this->getDoctrine()->getManager();
-            
-            $em->persist($obj_modele);
-            $em->flush();
+            $modele_exists = count($em->getRepository(Modele::class)->findBy(['nom' => $obj_modele->getNom(), 'marque' => $obj_modele->getMarque()])) > 0 ? true : false;
 
-            $this->addFlash('success', "Vous avez ajouté le nouveau modèle ".$obj_modele->getNom()." de la marque ".$obj_modele->getMarque()->getNom()." dans votre garage");
-            return $this->redirectToRoute('modeles');
+            if ($modele_exists) {               
+                $this->addFlash('error', "Le modele ".$obj_modele->getMarque()->getNom()." ".$obj_modele->getNom()." est déjà enregistré.");
+                return $this->redirectToRoute('modele_add');
+            } else {
+                $em->persist($obj_modele);
+                $em->flush();
+                $this->addFlash('success', "Vous avez ajouté le nouveau modele ".$obj_modele->getMarque()->getNom()." ".$obj_modele->getNom()." dans votre garage.");
+                return $this->redirectToRoute('modeles');
+            }
         }
 
         $array['title'] = "Ajout du nouveau modèle";
@@ -71,14 +76,23 @@ class ModeleController extends AbstractController
         $form->handleRequest($obj_request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $obj_marque = $em->getRepository(Marque::class)->find($modele->getMarque()->getId());
-            $obj_modele->setMarque($obj_marque);
 
-            $em->persist($obj_modele);
-            $em->flush();
+            $modele_exists = count($em->getRepository(Modele::class)->findBy(['nom' => $obj_modele->getNom(), 'marque' => $obj_modele->getMarque()])) > 0 ? true : false;
+            
+            if ($modele_exists) {               
+                $this->addFlash('error', "Le modele ".$obj_modele->getMarque()->getNom()." ".$obj_modele->getNom()." est déjà enregistré.");
+                return $this->redirectToRoute('modele_edit', ['id' => $obj_modele->getId()]);
+            } else {
 
-            $this->addFlash('success', "Vos modifications ont bien été enregistrées");
-            return $this->redirectToRoute('modeles');
+                $obj_marque = $em->getRepository(Marque::class)->find($modele->getMarque()->getId());
+                $obj_modele->setMarque($obj_marque);
+
+                $em->persist($obj_modele);
+                $em->flush();
+
+                $this->addFlash('success', "Vos modifications ont bien été enregistrées.");
+                return $this->redirectToRoute('modeles');
+            }
         }
 
         $array['title'] = "Modification du modèle ".$obj_modele->getMarque()->getNom()." ".$obj_modele->getNom();

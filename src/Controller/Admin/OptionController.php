@@ -44,11 +44,18 @@ class OptionController extends AbstractController
             // on cherche le manager
             $em = $this->getDoctrine()->getManager();
             
-            $em->persist($obj_option);
-            $em->flush();
+            $option_exists = count($em->getRepository(Option::class)->findBy(['title' => $obj_option->getTitle()])) > 0 ? true : false;
 
-            $this->addFlash('success', "Vous avez ajouté la nouvelle option ".$obj_option->getTitle());
-            return $this->redirectToRoute('options');
+            if ($option_exists) {               
+                $this->addFlash('error', "L'option' ".$obj_option->getTitle()." est déjà enregistrée.");
+                return $this->redirectToRoute('option_add');
+            } else {
+                $em->persist($obj_option);
+                $em->flush();
+
+                $this->addFlash('success', "Vous avez ajouté la nouvelle option ".$obj_option->getTitle());
+                return $this->redirectToRoute('options');
+            }
         }
 
         $array['title'] = "Ajout de la nouvelle option";
@@ -76,7 +83,7 @@ class OptionController extends AbstractController
             return $this->redirectToRoute('options');
         }
 
-        $array['title'] = "Modification de la option ".$obj_option->getTitle();
+        $array['title'] = "Modification de l'option ".$obj_option->getTitle();
         $array['editOptionForm'] = $form->createView();
 
         return $this->render('admin/option/editOption.html.twig', $array);
