@@ -19,11 +19,16 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFilter('format_price', [$this, 'format_price']),
+            new TwigFilter('format_km', [$this, 'format_km'])
         ];
     }
 
     public function format_price($price) {
         return $this->serviceInformations->format_price($price);
+    }
+
+    public function format_km($kilometrage) {
+        return number_format($kilometrage, 0, '', ' ')." km";
     }
 
 }

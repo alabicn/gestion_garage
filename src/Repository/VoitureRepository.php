@@ -54,7 +54,11 @@ class VoitureRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('v');
 
         return $qb
-            ->orderBy('v.prix', 'ASC')
+            ->where('v.a_vendre = :a_vendre')
+            ->setParameter('a_vendre', true)
+            ->leftJoin('v.modele', 'modele')
+            ->leftJoin('modele.marque', 'marque')
+            ->orderBy('marque.nom', 'ASC')
         ;
     } 
 
@@ -65,10 +69,12 @@ class VoitureRepository extends ServiceEntityRepository
            ->setParameter('a_vendre', $arr_criteres['a_vendre'])
            ->andWhere('v.estVendue is NULL');
 
-        // modele
-        if(array_key_exists('modeles', $arr_criteres) && !empty($arr_criteres['modeles']) && is_array($arr_criteres['modeles'])) {
-            $qb->andWhere('v.modele IN (:modeles)')
-               ->setParameter('modeles', $arr_criteres['modeles']);
+        // marque
+        if(array_key_exists('marques', $arr_criteres) && !empty($arr_criteres['marques']) && is_array($arr_criteres['marques'])) {
+            $qb->leftJoin('v.modele', 'modele')
+               ->leftJoin('modele.marque', 'marque')
+               ->andWhere('marque IN (:marques)')
+               ->setParameter('marques', $arr_criteres['marques']);
         }
 
         // garage
@@ -81,6 +87,12 @@ class VoitureRepository extends ServiceEntityRepository
         if(array_key_exists('typesCarroserie', $arr_criteres) && !empty($arr_criteres['typesCarroserie']) && is_array($arr_criteres['typesCarroserie'])) {
             $qb->andWhere('v.typeCarrosserie IN (:typesCarrosserie)')
                ->setParameter('typesCarrosserie', $arr_criteres['typesCarroserie']);
+        }
+
+        // carburant
+        if(array_key_exists('carburants', $arr_criteres) && !empty($arr_criteres['carburants']) && is_array($arr_criteres['carburants'])) {
+            $qb->andWhere('v.carburant IN (:carburants)')
+               ->setParameter('carburants', $arr_criteres['carburants']);
         }
 
         // nbPortes

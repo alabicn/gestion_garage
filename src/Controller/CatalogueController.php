@@ -37,7 +37,7 @@ class CatalogueController extends AbstractController
         $pagination = $paginator->paginate(
             $queryBuilder, /* query NOT result */
             $obj_request->query->getInt('page', 1)/*page number*/,
-            10/*limit per page*/
+            12/*limit per page*/
         );
 
         //$arr_voitures = $em->getRepository(Voiture::class)->findAll();
@@ -50,9 +50,23 @@ class CatalogueController extends AbstractController
     }
 
     /**
+     * @Route("/catalogue/voiture/{id}", name="product_detailed")
+     */
+    public function detailProduct(Voiture $voiture, Request $obj_request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $obj_voiture = $em->getRepository(Voiture::class)->find($voiture->getId());
+
+        $array['title'] = "Détails de ".$obj_voiture->getModele()->getMarque()->getNom()." ".$obj_voiture->getModele()->getNom();
+        $array['voiture'] = $obj_voiture;
+
+        return $this->render('catalogue/productDetail.html.twig', $array);
+    }
+
+    /**
      * @Route("/catalogue/advanced", name="catalogue_advanced")
      */
-    public function rechercheAvance(Request $obj_request)
+    public function rechercheAdvanced(Request $obj_request)
     {
         $form = $this->createForm(RechercheVoitureFormType::class);
         $form->handleRequest($obj_request);
@@ -74,11 +88,15 @@ class CatalogueController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
 
-        // modèles
-        $arr_modeles = $donnees['modele'];     
-        $entity_modeles = [];
-        foreach ($arr_modeles as $obj_modele) {
-            $entity_modeles[] = $obj_modele;
+        // marques
+        $arr_marques = $donnees['marque'];     
+        $entity_marques = [];
+        if (count($arr_marques) > 0) {
+            foreach ($arr_marques as $obj_marque) {
+                $entity_marques[] = $obj_marque;
+            }
+        } else {
+            $entity_marques = $em->getRepository(Marque::class)->findAll();
         }
 
         // garages
@@ -95,13 +113,17 @@ class CatalogueController extends AbstractController
         // type de carrosserie
         $arr_typeCarrosserie = $donnees['typeCarrosserie'];
 
+        // carburant
+        $arr_carburant = $donnees['carburant'];
+
         // nombre de portes
         $arr_nbPortes = $donnees['nbPortes'];
 
         $arr_criteres = [
-            'modeles' => $entity_modeles,
+            'marques' => $entity_marques,
             'garages' => $entity_garages,
             'typesCarroserie' => $arr_typeCarrosserie,
+            'carburants' => $arr_carburant,
             'nbPortes' => $arr_nbPortes,
             'a_vendre' => true,
         ];
@@ -118,6 +140,7 @@ class CatalogueController extends AbstractController
                 'fabrication' => !is_null($voiture->getDateFabrication()) ? $voiture->getDateFabrication()->format('d/m/Y') : "/",
                 'kilometrage' => !is_null($voiture->getKilometrage()) ? number_format($voiture->getKilometrage(), 0, '', ' ')." km" : "/",
                 'carrosserie' => !is_null($voiture->getTypeCarrosserie()) ? $voiture->getTypeCarrosserie() : "/",
+                'carburant' => !is_null($voiture->getCarburant()) ? $voiture->getCarburant() : "/",
                 'portes' => !is_null($voiture->getNbPortes()) ? $voiture->getNbPortes() : "/",
                 'prix' => !is_null($voiture->getPrix()) ? $this->serviceInformations->format_price($voiture->getPrix()) : "/"
             ];

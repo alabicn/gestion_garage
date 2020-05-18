@@ -32,7 +32,7 @@ class VendeurFixtures extends Fixture
         $arr_garages = $manager->getRepository(Garage::class)->findAll();
 
         foreach ($arr_garages as $garage) {
-            for ($i = 0;$i <= mt_rand(2, 5);$i++) {
+            for ($i = 0;$i <= rand(2, 5);$i++) {
                 // création des vendeurs dans garages
                 $str_nom = $faker->firstNameMale();
                 $str_prenom = $faker->lastName();
@@ -56,7 +56,7 @@ class VendeurFixtures extends Fixture
                 unset($str_prenom);
             }
 
-            for ($i = 0;$i <= mt_rand(1, 4);$i++) {
+            for ($i = 0;$i <= rand(1, 4);$i++) {
                 // création des vendeuses dans garages
                 $str_nom = $faker->firstNameFemale();
                 $str_prenom = $faker->lastName();

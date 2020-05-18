@@ -6,9 +6,10 @@
 <div class="container-sm">  
     <h1>{{title}}</h1>
     {{ form_start(rechercheVoiture) }}
-        {{ form_row(rechercheVoiture.modele) }}
+        {{ form_row(rechercheVoiture.marque) }}
         {{ form_row(rechercheVoiture.garage) }}
         {{ form_row(rechercheVoiture.typeCarrosserie) }}
+        {{ form_row(rechercheVoiture.carburant) }}
         {{ form_row(rechercheVoiture.nbPortes) }}
         <div style="display:inline-block; width:25%; float:right;">
             <div class="d-flex justify-content-between">

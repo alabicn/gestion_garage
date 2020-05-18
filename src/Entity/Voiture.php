@@ -64,11 +64,6 @@ class Voiture
     private $altPhotoPrincipal;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
-     */
-    private $etat;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Photo", mappedBy="voiture")
      */
     private $photo;
@@ -93,6 +88,16 @@ class Voiture
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $a_vendre;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $carburant;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $boiteDeVitesse;
 
     public function __construct()
     {
@@ -213,18 +218,6 @@ class Voiture
         return $this;
     }
 
-    public function getEtat(): ?string
-    {
-        return $this->etat;
-    }
-
-    public function setEtat(?string $etat): self
-    {
-        $this->etat = $etat;
-
-        return $this;
-    }
-
     /**
      * @return Collection|Photo[]
      */
@@ -319,6 +312,30 @@ class Voiture
     public function setAVendre(?bool $a_vendre): self
     {
         $this->a_vendre = $a_vendre;
+
+        return $this;
+    }
+
+    public function getCarburant(): ?string
+    {
+        return $this->carburant;
+    }
+
+    public function setCarburant(?string $carburant): self
+    {
+        $this->carburant = $carburant;
+
+        return $this;
+    }
+
+    public function getBoiteDeVitesse(): ?string
+    {
+        return $this->boiteDeVitesse;
+    }
+
+    public function setBoiteDeVitesse(?string $boiteDeVitesse): self
+    {
+        $this->boiteDeVitesse = $boiteDeVitesse;
 
         return $this;
     }
