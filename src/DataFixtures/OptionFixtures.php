@@ -11,7 +11,7 @@ class OptionFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $arr_options = ['GPS', 'Airbag', 'Climatisation', 'Radio digitale', 'Caméra de recul'];
+        $arr_options = ['Airbag', 'GPS', 'Climatisation', 'Radio digitale', 'Caméra de recul'];
 
         foreach ($arr_options as $option) {
             // création des options

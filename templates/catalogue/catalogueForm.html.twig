@@ -1,34 +1,50 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ title }}{% endblock %}
-
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" type="text/css" href="{{ asset('stylesheets/outputBubble.css') }}">
+{% endblock %}
 {% block body %}
-<div class="container-sm">  
-    <h1>{{title}}</h1>
-    {{ form_start(rechercheVoiture) }}
-        {{ form_row(rechercheVoiture.marque) }}
-        {{ form_row(rechercheVoiture.garage) }}
-        {{ form_row(rechercheVoiture.typeCarrosserie) }}
-        {{ form_row(rechercheVoiture.carburant) }}
-        {{ form_row(rechercheVoiture.nbPortes) }}
-        {{ form_row(rechercheVoiture.prix) }}
-        <div style="display:inline-block; width:25%; float:right;">
-            <div class="d-flex justify-content-between">
-            {{ form_row(rechercheVoiture.reinitialiser) }}
-            {{ form_row(rechercheVoiture.valider) }}
+<div class="d-flex bd-highlight">
+    <div class="p-2 flex-fill bd-highlight">
+        <h1>{{title}}</h1>
+        {{ form_start(rechercheVoiture) }}
+            {{ form_row(rechercheVoiture.marque) }}
+            {#{ form_row(rechercheVoiture.modele) }#}
+            {{ form_row(rechercheVoiture.garage) }}
+            {{ form_row(rechercheVoiture.typeCarrosserie) }}
+            {{ form_row(rechercheVoiture.carburant) }}
+            {{ form_row(rechercheVoiture.boites) }}
+            {{ form_row(rechercheVoiture.nbPortes) }}
+            {{ form_row(rechercheVoiture.options) }}
+            <div class="form-group">
+                <input type="checkbox" name="activate_prix" id="activate_prix" onChange="toggleCheckbox(checked)">
+                <label for="activate_prix">Inclure prix dans votre recherche ?</label>
             </div>
-        </div>
-    {{ form_end(rechercheVoiture) }}
-    <div id="table">
+            {{ form_row(rechercheVoiture.prix) }}
+            <div style="display:inline-block; width:25%; float:left;">
+                <div class="d-flex justify-content-between">
+                {{ form_row(rechercheVoiture.reinitialiser) }}
+                {{ form_row(rechercheVoiture.valider) }}
+                </div>
+            </div>
+        {{ form_end(rechercheVoiture) }}
     </div>
-</div>  
+    <div class="p-2 flex-fill bd-highlight">
+        <div id="table"> 
+        </div>
+    </div>
+</div>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
 
-    <script>
+    <script>//<button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Tooltip on top" aria-describedby="tooltip374576">Top</button>
 
+        /* FORM */
         var inputRange = document.getElementById("recherche_voiture_form_prix");
+
         var divPrices = document.createElement("div");
         divPrices.classList.add("d-flex");
         divPrices.classList.add("justify-content-between");
@@ -41,13 +57,32 @@
         spanMax.innerHTML = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(inputRange.max);
         divPrices.appendChild(spanMax);
 
-        inputRange.parentNode.insertBefore(divPrices, inputRange.nextSibling);
+        //inputRange.parentNode.insertBefore(divPrices, inputRange.nextSibling);
 
-        // myimg.parentNode.insertBefore(text, myimg.nextSibling)
+        var divParent = inputRange.parentElement;
+        divParent.setAttribute("id", "prix_group");
+        divParent.setAttribute("hidden", true);
+        divParent.appendChild(divPrices);
+
+        // affichahge de la valeur
+        var outputRange = document.createElement("output");
+        outputRange.classList.add("bubble");
+        inputRange.parentNode.insertBefore(outputRange, inputRange.nextSibling);
 
 
+        function toggleCheckbox(checked) {
+            if (checked) {
+                divParent.removeAttribute("hidden");
+                inputRange.removeAttribute("disabled");
+            } else {
+                divParent.setAttribute("hidden", true);
+                inputRange.setAttribute("disabled");
+            }
+        }
+
+        /* JSON */
         var voitures = {% if arrVoitures is defined %}{{ arrVoitures|json_encode|raw }}{% else %}[]{% endif %};
-        var obj = JSON.parse(voitures);
+        var obj = voitures.length > 0 ? JSON.parse(voitures) : [];
         var cols = []; 
               
         for (var l = 0; l < obj.length; l++) { 
@@ -111,10 +146,36 @@
         el.innerHTML = ""; 
         el.appendChild(table);
 
+        /* DataTable */
         $('#dtBasicExample').DataTable({
             "pagingType": "simple_numbers"
         });
         $('.dataTables_lenght-').addClass('bs-Select');
+
+
+        /* output affichage de la valeur */
+        const allRanges = document.querySelectorAll("#prix_group");
+        allRanges.forEach(wrap => {
+        const range = wrap.querySelector("#recherche_voiture_form_prix");
+        const bubble = wrap.querySelector(".bubble");
+
+        range.addEventListener("input", () => {
+            setBubble(range, bubble);
+        });
+
+        setBubble(range, bubble);
+        });
+
+        function setBubble(range, bubble) {
+            const val = range.value;
+            const min = range.min ? range.min : 0;
+            const max = range.max ? range.max : 100;
+            const newVal = Number(((val - min) * 100) / (max - min));
+            bubble.innerHTML = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(val);
+
+            // Sorta magic numbers based on size of the native UI thumb
+            bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;
+        }
 
     </script>
 {% endblock %}
