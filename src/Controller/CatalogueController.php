@@ -78,7 +78,7 @@ class CatalogueController extends AbstractController
         }
 
 
-        $array['title'] = 'Recherche detaillé';
+        $array['title'] = 'Recherche detaillée';
         $array['rechercheVoiture'] = $form->createView();
 
         return $this->render('catalogue/catalogueForm.html.twig', $array);
@@ -119,12 +119,16 @@ class CatalogueController extends AbstractController
         // nombre de portes
         $arr_nbPortes = $donnees['nbPortes'];
 
+        // prix
+        $prix = $donnees['prix'];
+
         $arr_criteres = [
             'marques' => $entity_marques,
             'garages' => $entity_garages,
             'typesCarroserie' => $arr_typeCarrosserie,
             'carburants' => $arr_carburant,
             'nbPortes' => $arr_nbPortes,
+            'prix' => intval($prix) / 1.2, // on divise TVA car en BDD les prix sont sans taux
             'a_vendre' => true,
         ];
       
@@ -137,7 +141,7 @@ class CatalogueController extends AbstractController
             $arr_voitures[] = [
                 'modele' => $voiture->getModele()->getMarque()->getNom()." ".$voiture->getModele()->getNom(),
                 'garage' => $voiture->getGarage()->getNom(),
-                'fabrication' => !is_null($voiture->getDateFabrication()) ? $voiture->getDateFabrication()->format('d/m/Y') : "/",
+                'annee' => !is_null($voiture->getDateFabrication()) ? $voiture->getDateFabrication()->format('Y') : "/",
                 'kilometrage' => !is_null($voiture->getKilometrage()) ? number_format($voiture->getKilometrage(), 0, '', ' ')." km" : "/",
                 'carrosserie' => !is_null($voiture->getTypeCarrosserie()) ? $voiture->getTypeCarrosserie() : "/",
                 'carburant' => !is_null($voiture->getCarburant()) ? $voiture->getCarburant() : "/",

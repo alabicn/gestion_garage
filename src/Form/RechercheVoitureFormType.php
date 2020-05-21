@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
@@ -50,7 +51,7 @@ class RechercheVoitureFormType extends AbstractType
             ])
             ->add('typeCarrosserie', ChoiceType::class, [
                 'choices' => [
-                    'Berlin' => 'Berlin',
+                    'Berline' => 'Berline',
                     'Monospace' => 'Monospace',
                     'Cabriolet' => 'Cabriolet',
                     'Coupé' => 'Coupé',
@@ -76,7 +77,13 @@ class RechercheVoitureFormType extends AbstractType
                 'expanded' => true,
                 'multiple' => true
             ])
-            
+            ->add('prix', RangeType::class, [
+                'attr' => [
+                    'min' => 10000,
+                    'max' => 100000,
+                    'class' => 'custom-range'
+                ]
+            ])
             ->add('reinitialiser', ResetType::class, [
                 'attr' => ['class' => 'btn btn-danger']
             ])

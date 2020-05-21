@@ -99,6 +99,8 @@ class Voiture
      */
     private $boiteDeVitesse;
 
+    const TVA = 1.2;
+
     public function __construct()
     {
         $this->photo = new ArrayCollection();
@@ -184,7 +186,9 @@ class Voiture
 
     public function getPrix(): ?float
     {
-        return $this->prix;
+        $prix = $this->prix * self::TVA;
+
+        return $prix;
     }
 
     public function setPrix(?float $prix): self

@@ -97,8 +97,14 @@ class VoitureRepository extends ServiceEntityRepository
 
         // nbPortes
         if(array_key_exists('nbPortes', $arr_criteres) && !empty($arr_criteres['nbPortes']) && is_array($arr_criteres['nbPortes'])) {
-            $qb->andWhere('v.nbPortes = :nbPortes')
+            $qb->andWhere('v.nbPortes IN (:nbPortes)')
                ->setParameter('nbPortes', $arr_criteres['nbPortes']);
+        }
+
+        //prix 
+        if(array_key_exists('prix', $arr_criteres) && !empty($arr_criteres['prix'])) {
+            $qb->andWhere('v.prix < :prix')
+               ->setParameter('prix', $arr_criteres['prix']);
         }
 
         return $qb->getQuery()->getResult();

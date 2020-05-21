@@ -11,6 +11,7 @@
         {{ form_row(rechercheVoiture.typeCarrosserie) }}
         {{ form_row(rechercheVoiture.carburant) }}
         {{ form_row(rechercheVoiture.nbPortes) }}
+        {{ form_row(rechercheVoiture.prix) }}
         <div style="display:inline-block; width:25%; float:right;">
             <div class="d-flex justify-content-between">
             {{ form_row(rechercheVoiture.reinitialiser) }}
@@ -26,6 +27,24 @@
     {{ parent() }}
 
     <script>
+
+        var inputRange = document.getElementById("recherche_voiture_form_prix");
+        var divPrices = document.createElement("div");
+        divPrices.classList.add("d-flex");
+        divPrices.classList.add("justify-content-between");
+
+        var spanMin = document.createElement("span");
+        spanMin.innerHTML = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(inputRange.min);
+        divPrices.appendChild(spanMin);
+        
+        var spanMax = document.createElement("span");
+        spanMax.innerHTML = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(inputRange.max);
+        divPrices.appendChild(spanMax);
+
+        inputRange.parentNode.insertBefore(divPrices, inputRange.nextSibling);
+
+        // myimg.parentNode.insertBefore(text, myimg.nextSibling)
+
 
         var voitures = {% if arrVoitures is defined %}{{ arrVoitures|json_encode|raw }}{% else %}[]{% endif %};
         var obj = JSON.parse(voitures);

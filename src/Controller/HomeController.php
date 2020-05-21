@@ -18,7 +18,6 @@ class HomeController extends AbstractController
     public function index(ServiceInformations $serviceInformations)
     {
 
-        dump($this->getDoctrine()->getManager()->getRepository(Voiture::class)->findBy(['typeCarrosserie' => "Berline", 'modele' => '208']));
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
         ]);

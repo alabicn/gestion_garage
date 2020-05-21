@@ -3,8 +3,12 @@
 {% block title %}{{title}}{% endblock %}
 
 {% block body %}
-    <h1>{{title}}</h1>  
-    <h1>({{ pagination.getTotalItemCount }})</h1>
+    <div class="d-flex bd-highlight">
+        <div class="p-2 w-100 bd-highlight">
+        <h1>{{title}}</h1>
+        </div>
+        <div class="p-2 flex-shrink-1 bd-highlight"><a href="{{ path('catalogue_advanced') }}" class="btn btn-outline-primary" role="button">Recherche detaillée</a></div>
+    </div>
     <div class="container">    
       <div class="row">
     {% set increment = 0 %}
