@@ -46,7 +46,7 @@ class ModeleController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // on cherche le manager
             $em = $this->getDoctrine()->getManager();
-            $modele_exists = count($em->getRepository(Modele::class)->findBy(['nom' => $obj_modele->getNom(), 'marque' => $obj_modele->getMarque()])) > 0 ? true : false;
+            $modele_exists = !empty($em->getRepository(Modele::class)->findBy(['nom' => $obj_modele->getNom(), 'marque' => $obj_modele->getMarque()])) ? true : false;
 
             if ($modele_exists) {               
                 $this->addFlash('error', "Le modele ".$obj_modele->getMarque()->getNom()." ".$obj_modele->getNom()." est déjà enregistré.");
@@ -77,7 +77,7 @@ class ModeleController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $modele_exists = count($em->getRepository(Modele::class)->findBy(['nom' => $obj_modele->getNom(), 'marque' => $obj_modele->getMarque()])) > 0 ? true : false;
+            $modele_exists = !empty($em->getRepository(Modele::class)->findBy(['nom' => $obj_modele->getNom(), 'marque' => $obj_modele->getMarque()])) ? true : false;
             
             if ($modele_exists) {               
                 $this->addFlash('error', "Le modele ".$obj_modele->getMarque()->getNom()." ".$obj_modele->getNom()." est déjà enregistré.");

@@ -97,7 +97,7 @@ class CatalogueController extends AbstractController
         // marques
         $arr_marques = $donnees['marque'];     
         $entity_marques = [];
-        if (count($arr_marques) > 0) {
+        if (!empty($arr_marques)) {
             foreach ($arr_marques as $obj_marque) {
                 $entity_marques[] = $obj_marque;
             }
@@ -125,7 +125,7 @@ class CatalogueController extends AbstractController
         // garages
         $arr_garages = $donnees['garage'];
         $entity_garages = [];
-        if (count($arr_garages) > 0) {
+        if (!empty($arr_garages)) {
             foreach ($arr_garages as $obj_garage) {
                 $entity_garages[] = $obj_garage;
             }
@@ -146,18 +146,16 @@ class CatalogueController extends AbstractController
         $arr_nbPortes = $donnees['nbPortes'];
 
         // options
-        /*$arr_options = $donnees['options'];
+        $arr_options = $donnees['options'];
         $entity_options = [];
-        if (count($arr_options) > 0) {
+        if (!empty($arr_options)) {
             foreach ($arr_options as $obj_option) {
                 $entity_options[] = $obj_option;
             }
-        } else {
-            $entity_options[] = $em->getRepository(Option::class)->findAll();
-        }*/
+        }
 
         // prix
-        $prix = $donnees['prix'] !== null ? $donnees['prix'] / 1.2 : $donnees['prix']; // si le prix est parametre de recherche on divise TVA car en BDD les prix sont HT
+        $prix = $donnees['prix'] !== null ? round($donnees['prix'] / 1.2 + 1) : $donnees['prix']; // si le prix est parametre de recherche on divise TVA car en BDD les prix sont HT
 
         $arr_criteres = [
             'marques' => $entity_marques,
@@ -167,7 +165,7 @@ class CatalogueController extends AbstractController
             'boites' => $arr_boites,
             'carburants' => $arr_carburant,
             'nbPortes' => $arr_nbPortes,
-            //'options' => $entity_options,
+            'options' => $entity_options,
             'prix' => $prix,
             'a_vendre' => true,
         ];
@@ -193,8 +191,9 @@ class CatalogueController extends AbstractController
                 'carburant' => !is_null($voiture->getCarburant()) ? $voiture->getCarburant() : "/",
                 'boite' => !is_null($voiture->getBoiteDeVitesse()) ? $voiture->getBoiteDeVitesse() : "/",
                 'portes' => !is_null($voiture->getNbPortes()) ? $voiture->getNbPortes() : "/",
-                'options' => count($options) > 0 ? implode("<br>", $options) : "/",
+                'options' => !empty($options) ? implode("<br>", $options) : "/",
                 'prix' => !is_null($voiture->getPrix()) ? $this->serviceInformations->format_price($voiture->getPrix()) : "/"
+                //'url' => $this->generateUrl('product_detailed', ['id' => $voiture->getId()])
             ];
         }
 

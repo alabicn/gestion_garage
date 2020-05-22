@@ -50,7 +50,7 @@ class GarageController extends AbstractController
             $str_ville = $ville[0];
             $str_codePostal = substr($ville[1], 0, -1);
 
-            $garage_exists = count($em->getRepository(Garage::class)->findBy(['nom' => $obj_garage->getNom(), 'numeroTelephone' => $obj_garage->getNumeroTelephone(), 'adresse' => $obj_garage->getAdresse(), 'code_postal' => $str_codePostal, 'ville' => $str_ville, 'pays' => 'France'])) > 0 ? true : false;
+            $garage_exists = !empty($em->getRepository(Garage::class)->findBy(['nom' => $obj_garage->getNom(), 'numeroTelephone' => $obj_garage->getNumeroTelephone(), 'adresse' => $obj_garage->getAdresse(), 'code_postal' => $str_codePostal, 'ville' => $str_ville, 'pays' => 'France'])) ? true : false;
 
             if ($garage_exists) {  
 
@@ -89,7 +89,7 @@ class GarageController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $garage_exists = count($em->getRepository(Garage::class)->findBy(['nom' => $obj_garage->getNom(), 'numeroTelephone' => $obj_garage->getNumeroTelephone(), 'adresse' => $obj_garage->getAdresse(), 'code_postal' => $obj_garage->getCodePostal(), 'ville' => $obj_garage->getVille(), 'pays' => 'France'])) > 0 ? true : false;
+            $garage_exists = !empty($em->getRepository(Garage::class)->findBy(['nom' => $obj_garage->getNom(), 'numeroTelephone' => $obj_garage->getNumeroTelephone(), 'adresse' => $obj_garage->getAdresse(), 'code_postal' => $obj_garage->getCodePostal(), 'ville' => $obj_garage->getVille(), 'pays' => 'France'])) ? true : false;
 
             if ($garage_exists) {  
                              

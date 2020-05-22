@@ -44,7 +44,7 @@ class OptionController extends AbstractController
             // on cherche le manager
             $em = $this->getDoctrine()->getManager();
             
-            $option_exists = count($em->getRepository(Option::class)->findBy(['title' => $obj_option->getTitle()])) > 0 ? true : false;
+            $option_exists = !empty($em->getRepository(Option::class)->findBy(['title' => $obj_option->getTitle()])) ? true : false;
 
             if ($option_exists) {               
                 $this->addFlash('error', "L'option' ".$obj_option->getTitle()." est déjà enregistrée.");

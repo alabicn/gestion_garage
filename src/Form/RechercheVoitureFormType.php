@@ -64,36 +64,22 @@ class RechercheVoitureFormType extends AbstractType
                 'multiple' => true
             ])
             ->add('typeCarrosserie', ChoiceType::class, [
-                'choices' => [
-                    'Berline' => 'Berline',
-                    'Cabriolet' => 'Cabriolet',
-                ],
+                'choices' => $this->getTypesCarrosserie(),
                 'expanded' => true,
                 'multiple' => true
             ])
             ->add('carburant', ChoiceType::class, [
-                'choices' => [
-                    'Diesel' => 'Diesel',
-                    'Essence' => 'Essence',
-                    'Hybride' => 'Hybride',
-                ],
+                'choices' => $this->getCarburants(),
                 'expanded' => true,
                 'multiple' => true
             ])
             ->add('boites', ChoiceType::class, [
-                'choices' => [
-                    'Automatique' => 'Automatique',
-                    'Manuelle' => 'Manuelle'
-                ],
+                'choices' => $this->getBoites(),
                 'expanded' => true,
                 'multiple' => true
             ])
             ->add('nbPortes', ChoiceType::class, [
-                'choices' => [
-                    '3' => 3,
-                    '5' => 5,
-                    '7' => 7
-                ],
+                'choices' => $this->getNbPortes(),
                 'expanded' => true,
                 'multiple' => true
             ])
@@ -111,8 +97,8 @@ class RechercheVoitureFormType extends AbstractType
             ])
             ->add('prix', RangeType::class, [
                 'attr' => [
-                    'min' => intval($this->getMinMaxPrix()['min_prix'] * 1.2),
-                    'max' => intval($this->getMinMaxPrix()['max_prix'] * 1.2),
+                    'min' => round($this->getMinMaxPrix()['min_prix'] * 1.2, 2),
+                    'max' => round($this->getMinMaxPrix()['max_prix'] * 1.2, 2),
                     'class' => 'custom-range'
                 ],
                 'disabled' => true
@@ -131,6 +117,35 @@ class RechercheVoitureFormType extends AbstractType
         $resolver->setDefaults([
             // Configure your form options here
         ]);
+    }
+
+    
+    function getTypesCarrosserie() {
+        
+        $typesCarrosserie = $this->em->getRepository(Voiture::class)->findAllTypesCarrosserie();
+        
+        return $typesCarrosserie;
+    }
+    
+    function getCarburants() {
+
+        $carburants = $this->em->getRepository(Voiture::class)->findAllCarburants();
+
+        return $carburants;
+    }
+
+    function getBoites() {
+
+        $boites = $this->em->getRepository(Voiture::class)->findAllBoites();
+
+        return $boites;
+    }
+
+    function getNbPortes() {
+
+        $nbPortes = $this->em->getRepository(Voiture::class)->findAllNbPortes();
+
+        return $nbPortes;
     }
 
     function getMinMaxPrix() {
