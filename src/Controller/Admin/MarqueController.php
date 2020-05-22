@@ -43,7 +43,7 @@ class MarqueController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // on cherche le manager
             $em = $this->getDoctrine()->getManager();
-            $marque_exists = count($em->getRepository(Marque::class)->findBy(['nom' => $obj_marque->getNom()])) > 0 ? true : false;
+            $marque_exists = !empty($em->getRepository(Marque::class)->findBy(['nom' => $obj_marque->getNom()])) ? true : false;
 
             if ($marque_exists) {               
                 $this->addFlash('error', "La marque ".$obj_marque->getNom()." est déjà enregistrée.");
@@ -74,7 +74,7 @@ class MarqueController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $marque_exists = count($em->getRepository(Marque::class)->findBy(['nom' => $obj_marque->getNom()])) > 0 ? true : false;
+            $marque_exists = !empty($em->getRepository(Marque::class)->findBy(['nom' => $obj_marque->getNom()])) ? true : false;
             
             if ($marque_exists) {               
                 $this->addFlash('error', "La marque ".$obj_marque->getNom()." est déjà enregistrée.");

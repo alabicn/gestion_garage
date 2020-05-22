@@ -50,17 +50,25 @@ class GarageController extends AbstractController
             $str_ville = $ville[0];
             $str_codePostal = substr($ville[1], 0, -1);
 
-            $obj_garage->setVille(null)
-                       ->setCodePostal($str_codePostal)
-                       ->setPays("France")
-                       ->setEstFerme(false);
+            $garage_exists = !empty($em->getRepository(Garage::class)->findBy(['nom' => $obj_garage->getNom(), 'numeroTelephone' => $obj_garage->getNumeroTelephone(), 'adresse' => $obj_garage->getAdresse(), 'code_postal' => $str_codePostal, 'ville' => $str_ville, 'pays' => 'France'])) ? true : false;
 
+            if ($garage_exists) {  
+
+                $this->addFlash('error', "La garage ".$obj_garage->getNom()." dont l'adresse ".$obj_garage->getAdresse().", ".$obj_garage->getCodePostal()." ".$obj_garage->getVille()." est déjà enregistrée.");
+                return $this->redirectToRoute('garage_add', ['id' => $obj_marque->getId()]);
+            } else {
+                
+                $obj_garage->setVille($str_ville)
+                           ->setCodePostal($str_codePostal)
+                           ->setPays("France")
+                           ->setEstFerme(false);
             
-            $em->persist($obj_garage);
-            $em->flush();
+                $em->persist($obj_garage);
+                $em->flush();
 
-            $this->addFlash('success', "Vous avez créé la nouvelle garage");
-            return $this->redirectToRoute('garages');
+                $this->addFlash('success', "Vous avez créé la nouvelle garage.");
+                return $this->redirectToRoute('garages');
+            }
         }
 
         $array['title'] = "Ajout de la nouvelle garage";
@@ -81,11 +89,20 @@ class GarageController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $em->persist($obj_garage);
-            $em->flush();
+            $garage_exists = !empty($em->getRepository(Garage::class)->findBy(['nom' => $obj_garage->getNom(), 'numeroTelephone' => $obj_garage->getNumeroTelephone(), 'adresse' => $obj_garage->getAdresse(), 'code_postal' => $obj_garage->getCodePostal(), 'ville' => $obj_garage->getVille(), 'pays' => 'France'])) ? true : false;
 
-            $this->addFlash('success', "Vos modifications ont bien été enregistrées");
-            return $this->redirectToRoute('garages');
+            if ($garage_exists) {  
+                             
+                $this->addFlash('error', "La garage ".$obj_garage->getNom()." dont l'adresse ".$obj_garage->getAdresse().", ".$obj_garage->getCodePostal()." ".$obj_garage->getVille()." est déjà enregistrée.");
+                return $this->redirectToRoute('garage_edit', ['id' => $obj_garage->getId()]);
+            } else {
+            
+                $em->persist($obj_garage);
+                $em->flush();
+
+                $this->addFlash('success', "Vos modifications ont bien été enregistrées.");
+                return $this->redirectToRoute('garages');
+            };
         }
 
         $array['title'] = "Modification de la garage ".$obj_garage->getNom();

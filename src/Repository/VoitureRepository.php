@@ -49,6 +49,93 @@ class VoitureRepository extends ServiceEntityRepository
     }
     */
 
+    public function findAllTypesCarrosserie()
+    {
+        $qb = $this->createQueryBuilder('v');
+        $qb->select('v.typeCarrosserie AS typeCarrosserie')
+           ->where('v.typeCarrosserie is not NULL')
+           ->groupBy('typeCarrosserie');
+        
+        $arr_result = $qb->getQuery()->getResult();
+
+        $typesCarrosserie = [];
+        foreach ($arr_result as $arr_typeCarrosserie) {
+            foreach ($arr_typeCarrosserie as $typeCarrosserie) {
+                $typesCarrosserie[$typeCarrosserie] = $typeCarrosserie;
+            }
+        }
+
+        return $typesCarrosserie;
+    }
+
+    public function findAllCarburants()
+    {
+        $qb = $this->createQueryBuilder('v');
+        $qb->select('v.carburant AS carburant')
+           ->where('v.carburant is not NULL')
+           ->groupBy('carburant')
+           ->orderBy('carburant', 'ASC');
+        
+        $arr_result = $qb->getQuery()->getResult();
+
+        $carburants = [];
+        foreach ($arr_result as $arr_carburants) {
+            foreach ($arr_carburants as $carburant) {
+                $carburants[$carburant] = $carburant;
+            }
+        }
+
+        return $carburants;
+    }
+
+    public function findAllBoites()
+    {
+        $qb = $this->createQueryBuilder('v');
+        $qb->select('v.boiteDeVitesse AS boite')
+           ->where('v.boiteDeVitesse is not NULL')
+           ->groupBy('boite')
+           ->orderBy('boite', 'ASC');
+
+        $arr_result = $qb->getQuery()->getResult();
+
+        $boites = [];
+        foreach ($arr_result as $arr_boites) {
+            foreach ($arr_boites as $boite) {
+                $boites[$boite] = $boite;
+            }
+        }
+
+        return $boites;
+    }
+
+    public function findAllNbPortes()
+    {
+        $qb = $this->createQueryBuilder('v');
+        $qb->select('v.nbPortes AS nbPortes')
+           ->where('v.nbPortes is not NULL')
+           ->groupBy('nbPortes')
+           ->orderBy('nbPortes', 'ASC');
+
+        $arr_result = $qb->getQuery()->getResult();
+
+        $nbPortes = [];
+        foreach ($arr_result as $arr_nbPortes) {
+            foreach ($arr_nbPortes as $nbPorte) {
+                $nbPortes[$nbPorte] = $nbPorte;
+            }
+        }
+
+        return $nbPortes;
+    }
+
+    public function findMinMaxPrixDeVoiture()
+    {
+        $qb = $this->createQueryBuilder('v');
+        $qb->select('MIN(v.prix) AS min_prix, MAX(v.prix) AS max_prix');
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
     public function getWithSearchQueryBuilder(): QueryBuilder
     {
         $qb = $this->createQueryBuilder('v');
@@ -77,28 +164,56 @@ class VoitureRepository extends ServiceEntityRepository
                ->setParameter('marques', $arr_criteres['marques']);
         }
 
+        // modele
+        /*if (array_key_exists('modele', $arr_criteres) && !empty($arr_criteres['modele']) && is_array($arr_criteres['modele'])) {
+            $qb->andWhere('v.modele IN (:modele)')
+               ->setParameter('modele', $arr_criteres['modele'])
+               ->andWhere('modele.marque = :marque')
+               ->setParameter('marque', $arr_criteres['modele'][0]->getMarque());
+        }*/
+
         // garage
-        if(array_key_exists('garages', $arr_criteres) && !empty($arr_criteres['garages']) && is_array($arr_criteres['garages'])) {         
+        if (array_key_exists('garages', $arr_criteres) && !empty($arr_criteres['garages']) && is_array($arr_criteres['garages'])) {         
             $qb->andWhere('v.garage IN (:garages)')
                ->setParameter('garages', $arr_criteres['garages']);
         }
 
         // typeCarrosserie
-        if(array_key_exists('typesCarroserie', $arr_criteres) && !empty($arr_criteres['typesCarroserie']) && is_array($arr_criteres['typesCarroserie'])) {
+        if (array_key_exists('typesCarroserie', $arr_criteres) && !empty($arr_criteres['typesCarroserie']) && is_array($arr_criteres['typesCarroserie'])) {
             $qb->andWhere('v.typeCarrosserie IN (:typesCarrosserie)')
                ->setParameter('typesCarrosserie', $arr_criteres['typesCarroserie']);
         }
 
         // carburant
-        if(array_key_exists('carburants', $arr_criteres) && !empty($arr_criteres['carburants']) && is_array($arr_criteres['carburants'])) {
+        if (array_key_exists('carburants', $arr_criteres) && !empty($arr_criteres['carburants']) && is_array($arr_criteres['carburants'])) {
             $qb->andWhere('v.carburant IN (:carburants)')
                ->setParameter('carburants', $arr_criteres['carburants']);
         }
 
+        // boite de vitesse
+        if (array_key_exists('boites', $arr_criteres) && !empty($arr_criteres['boites']) && is_array($arr_criteres['boites'])) {
+            $qb->andWhere('v.boiteDeVitesse IN (:boites)')
+               ->setParameter('boites', $arr_criteres['boites']);
+        }
+
         // nbPortes
-        if(array_key_exists('nbPortes', $arr_criteres) && !empty($arr_criteres['nbPortes']) && is_array($arr_criteres['nbPortes'])) {
-            $qb->andWhere('v.nbPortes = :nbPortes')
+        if (array_key_exists('nbPortes', $arr_criteres) && !empty($arr_criteres['nbPortes']) && is_array($arr_criteres['nbPortes'])) {
+            $qb->andWhere('v.nbPortes IN (:nbPortes)')
                ->setParameter('nbPortes', $arr_criteres['nbPortes']);
+        }
+
+        // options
+        if (array_key_exists('options', $arr_criteres) && !empty($arr_criteres['options']) && is_array($arr_criteres['options'])) {
+            $qb->leftJoin('v.voitureOptions', 'vo')
+               ->leftJoin('vo.option', 'option')
+               ->andWhere('option IN (:options)')
+               ->setParameter('options', $arr_criteres['options']);
+        }
+
+        //prix 
+        if (array_key_exists('prix', $arr_criteres) && !empty($arr_criteres['prix'])) {
+            $qb->andWhere('v.prix <= :prix')
+               ->setParameter('prix', $arr_criteres['prix']);
         }
 
         return $qb->getQuery()->getResult();

@@ -6,7 +6,7 @@
         {% block stylesheets %}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
         <link rel="stylesheet" href="{{ asset('stylesheets/bootstrap.min.css') }}">
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.css"/>
         {% endblock %}
     </head>
     <body>
@@ -21,9 +21,6 @@
                         <li class="nav-item">  
                             <a class="nav-link" href="{{ path('catalogue') }}">Nos voitures</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('catalogue_advanced') }}">Recherche avancée</a>
-                        </li>
                     {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="true">Espace admin</a>
@@ -32,6 +29,7 @@
                                 <a class="dropdown-item" href="{{ path('marques') }}">Marques</a>
                                 <a class="dropdown-item" href="{{ path('modeles') }}">Modeles</a>
                                 <a class="dropdown-item" href="{{ path('options') }}">Options</a>
+                                <a class="dropdown-item" href="{{ path('voitures') }}">Voitures</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#">Vendeurs</a>
                             </div>
@@ -100,7 +98,7 @@
         </footer>
         {% block javascripts %}
             <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-            <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+            <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.js"></script>
             <script>
             $(document).ready(function(){
                 $('.dropdown-toggle').click(function () {

@@ -5,9 +5,11 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\VoitureRepository")
+ * @UniqueEntity("immatriculation")
  */
 class Voiture
 {
@@ -19,7 +21,7 @@ class Voiture
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true, unique=true)
      */
     private $immatriculation;
 
@@ -98,6 +100,8 @@ class Voiture
      * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $boiteDeVitesse;
+
+    const TVA = 1.2;
 
     public function __construct()
     {
@@ -184,7 +188,9 @@ class Voiture
 
     public function getPrix(): ?float
     {
-        return $this->prix;
+        $prix = $this->prix * self::TVA;
+
+        return $prix;
     }
 
     public function setPrix(?float $prix): self

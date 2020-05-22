@@ -3,9 +3,13 @@
 {% block title %}{{title}}{% endblock %}
 
 {% block body %}
-    <h1>{{title}}</h1>  
-    <h1>({{ pagination.getTotalItemCount }})</h1>
-    <div class="container">    
+    <div class="d-flex bd-highlight">
+        <div class="p-2 w-100 bd-highlight">
+        <h1>{{title}}</h1>
+        </div>
+        <div class="p-2 flex-shrink-1 bd-highlight"><a href="{{ path('catalogue_advanced') }}" class="btn btn-outline-primary" role="button">Recherche avancée</a></div>
+    </div>
+    <div class="container-lg">    
       <div class="row">
     {% set increment = 0 %}
     {% for voiture in pagination %}
@@ -24,6 +28,7 @@
               <li class="list-group-item">{{ voiture.boiteDeVitesse }}</li>
               <li class="list-group-item">{{ voiture.nbPortes }} portes</li>
               <li class="list-group-item">{{ voiture.kilometrage|format_km }}</li>
+              <li class="list-group-item">{% for voitureOption in voiture.voitureOptions %}<span class="badge badge-pill badge-primary">{% if voitureOption.nombre > 1 %}{{ voitureOption.option.title }}&nbsp;({{ voitureOption.nombre }}){% else %}{{ voitureOption.option.title }}{% endif %}</span>&nbsp;{% endfor %}</li>
               <li class="list-group-item text-success">{{ voiture.prix|format_price }}</li>
             </ul>
             <div class="card-body">
