@@ -18,6 +18,7 @@ class HomeController extends AbstractController
     public function index(ServiceInformations $serviceInformations)
     {
 
+        $x = $this->getDoctrine()->getManager()->getRepository(Voiture::class)->findMinMaxPrixDeVoiture();
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
         ]);

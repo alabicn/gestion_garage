@@ -19,9 +19,18 @@ use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
+use Doctrine\ORM\EntityManagerInterface;
+
 
 class RechercheVoitureFormType extends AbstractType
 {
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -102,8 +111,8 @@ class RechercheVoitureFormType extends AbstractType
             ])
             ->add('prix', RangeType::class, [
                 'attr' => [
-                    'min' => 10000,
-                    'max' => 100000,
+                    'min' => intval($this->getMinMaxPrix()['min_prix'] * 1.2),
+                    'max' => intval($this->getMinMaxPrix()['max_prix'] * 1.2),
                     'class' => 'custom-range'
                 ],
                 'disabled' => true
@@ -122,5 +131,12 @@ class RechercheVoitureFormType extends AbstractType
         $resolver->setDefaults([
             // Configure your form options here
         ]);
+    }
+
+    function getMinMaxPrix() {
+
+        $arr_prix = $this->em->getRepository(Voiture::class)->findMinMaxPrixDeVoiture();
+
+        return $arr_prix;
     }
 }

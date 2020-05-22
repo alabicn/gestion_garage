@@ -14,6 +14,7 @@ use App\Entity\Voiture;
 use App\Entity\Marque;
 use App\Entity\Modele;
 use App\Entity\Garage; 
+use App\Entity\Option;
 use App\Form\RechercheVoitureFormType;
 
 use Knp\Component\Pager\PaginatorInterface;
@@ -145,7 +146,7 @@ class CatalogueController extends AbstractController
         $arr_nbPortes = $donnees['nbPortes'];
 
         // options
-        $arr_options = $donnees['options'];
+        /*$arr_options = $donnees['options'];
         $entity_options = [];
         if (count($arr_options) > 0) {
             foreach ($arr_options as $obj_option) {
@@ -153,7 +154,7 @@ class CatalogueController extends AbstractController
             }
         } else {
             $entity_options[] = $em->getRepository(Option::class)->findAll();
-        }
+        }*/
 
         // prix
         $prix = $donnees['prix'] !== null ? $donnees['prix'] / 1.2 : $donnees['prix']; // si le prix est parametre de recherche on divise TVA car en BDD les prix sont HT
@@ -166,7 +167,7 @@ class CatalogueController extends AbstractController
             'boites' => $arr_boites,
             'carburants' => $arr_carburant,
             'nbPortes' => $arr_nbPortes,
-            'options' => $entity_options,
+            //'options' => $entity_options,
             'prix' => $prix,
             'a_vendre' => true,
         ];
@@ -180,6 +181,7 @@ class CatalogueController extends AbstractController
             $options = [];
             foreach ($voiture->getVoitureOptions() as $voitureOption) {
                 $options[] = $voitureOption->getNombre() > 1 ? $voitureOption->getOption()->getTitle()." (".$voitureOption->getNombre().") " : $voitureOption->getOption()->getTitle();
+                asort($options);
             }
         
             $arr_voitures[] = [
@@ -191,7 +193,7 @@ class CatalogueController extends AbstractController
                 'carburant' => !is_null($voiture->getCarburant()) ? $voiture->getCarburant() : "/",
                 'boite' => !is_null($voiture->getBoiteDeVitesse()) ? $voiture->getBoiteDeVitesse() : "/",
                 'portes' => !is_null($voiture->getNbPortes()) ? $voiture->getNbPortes() : "/",
-                'options' => count($options) > 0 ? implode(", ", $options) : "/",
+                'options' => count($options) > 0 ? implode("<br>", $options) : "/",
                 'prix' => !is_null($voiture->getPrix()) ? $this->serviceInformations->format_price($voiture->getPrix()) : "/"
             ];
         }

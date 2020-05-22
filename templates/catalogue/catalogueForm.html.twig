@@ -23,11 +23,9 @@
                 <label for="activate_prix">Inclure prix dans votre recherche ?</label>
             </div>
             {{ form_row(rechercheVoiture.prix) }}
-            <div style="display:inline-block; width:25%; float:left;">
-                <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-around">
                 {{ form_row(rechercheVoiture.reinitialiser) }}
                 {{ form_row(rechercheVoiture.valider) }}
-                </div>
             </div>
         {{ form_end(rechercheVoiture) }}
     </div>
@@ -57,17 +55,27 @@
         spanMax.innerHTML = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(inputRange.max);
         divPrices.appendChild(spanMax);
 
-        //inputRange.parentNode.insertBefore(divPrices, inputRange.nextSibling);
 
         var divParent = inputRange.parentElement;
         divParent.setAttribute("id", "prix_group");
         divParent.setAttribute("hidden", true);
-        divParent.appendChild(divPrices);
+        divParent.insertBefore(divPrices, divParent.childNodes[1]);
 
         // affichahge de la valeur
         var outputRange = document.createElement("output");
         outputRange.classList.add("bubble");
         inputRange.parentNode.insertBefore(outputRange, inputRange.nextSibling);
+
+        /*
+        function myFunction() {
+        var newItem = document.createElement("LI");
+        var textnode = document.createTextNode("Water");
+        newItem.appendChild(textnode);
+
+        var list = document.getElementById("myList");
+        list.insertBefore(newItem, list.childNodes[0]);
+        }
+        */
 
 
         function toggleCheckbox(checked) {

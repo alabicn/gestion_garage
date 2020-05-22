@@ -49,6 +49,14 @@ class VoitureRepository extends ServiceEntityRepository
     }
     */
 
+    public function findMinMaxPrixDeVoiture()
+    {
+        $qb = $this->createQueryBuilder('v');
+        $qb->select('MIN(v.prix) AS min_prix, MAX(v.prix) AS max_prix');
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
     public function getWithSearchQueryBuilder(): QueryBuilder
     {
         $qb = $this->createQueryBuilder('v');
