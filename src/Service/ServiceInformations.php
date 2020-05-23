@@ -37,4 +37,16 @@ class ServiceInformations {
         asort($pays); // trier les villes par ordre alphabétique
         return $pays;
     }
+
+    /**
+     * Vérification si le numéro d'immatriculation est en bon format
+     */
+    public function verificationImmatriculation($immatriculation){
+        $regex = "#^[A-Z]{2}-[0-9]{3}-[A-Z]{2}$#";
+
+        if (preg_match($regex, $immatriculation))
+            return true;
+        else
+            return false;
+    }
 }
