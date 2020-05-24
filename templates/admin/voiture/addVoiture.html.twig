@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{title}}{% endblock %}
+{% block body %}
+<div class="container-sm">
+    <div class="d-flex bd-highlight">
+        <div class="p-2 w-100 bd-highlight">
+        <h1>{{title}}</h1>
+        </div>
+        <div class="p-2 flex-shrink-1 bd-highlight"><a href="{{ path('voitures') }}" class="btn btn-outline-primary" role="button"><i class="fas fa-arrow-left"></i></a></div>
+    </div>
+    {{ form_start(addVoitureForm) }}
+        {{ form_row(addVoitureForm.modele) }}
+        {{ form_row(addVoitureForm.garage) }}
+        {{ form_row(addVoitureForm.immatriculation) }}
+        {{ form_row(addVoitureForm.dateFabrication) }}
+        {{ form_row(addVoitureForm.kilometrage) }}
+        {{ form_row(addVoitureForm.typeCarrosserie) }}
+        {{ form_row(addVoitureForm.carburant) }}
+        {{ form_row(addVoitureForm.nbPortes) }}
+        {{ form_row(addVoitureForm.boiteDeVitesse) }}
+        <div class="form-group">
+            <button type="button" class="add-another-collection-widget btn btn-primary btn-sm" data-list-selector="#voitureOption-fields-list">Ajouter une option</button>
+            <span id="createOption" style="margin-left: 10px;">Si l'option n'apparait pas dans la liste, veuillez cliquer sur ce <a href="{{ path('option_add') }}" class="text-info">lien</a> pour la créer.</span>
+        </div>
+        <section id="voitureOption-fields-list" class="form-row"
+            data-prototype="{{ form_widget(addVoitureForm.voitureOptions.vars.prototype)|e }}"
+            data-widget-tags="{{ '<div></div>'|e }}"
+            data-widget-counter="{{ addVoitureForm.voitureOptions|length }}">
+        {% for voitureOption in addVoitureForm.voitureOptions %}
+            
+            {{ form_errors(voitureOption) }}
+            {{ form_widget(voitureOption) }}
+            
+        {% endfor %}
+        </section>    
+        {{ form_row(addVoitureForm.prix) }}
+        {{ form_row(addVoitureForm.valider) }}
+    {{ form_end(addVoitureForm) }}
+</div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+    // add-collection-widget.js
+    $(document).ready(function () { 
+        var $wrapper = $('#voitureOption-fields-list')
+
+        $('.add-another-collection-widget').click(function (e) {
+            var list = $($(this).attr('data-list-selector'))
+            // Try to find the counter of the list or use the length of the list
+            var counter = list.data('widget-counter') || list.children().length
+
+            // grab the prototype template
+            var newWidget = list.attr('data-prototype')
+            // replace the "__name__" used in the id and name of the prototype
+            // with a number that's unique to your emails
+            // end name attribute looks like name="contact[emails][2]"
+            newWidget = newWidget.replace(/__name__/g, counter)
+            // Increase the counter
+            counter++
+            // And store it, the length cannot be used if deleting widgets is allowed
+            list.data('widget-counter', counter)
+
+            // create a new list element and add it to the list
+            var newElem = $(list.attr('data-widget-tags')).html(newWidget)
+           
+            newElem.appendTo(list)
+        });
+        $wrapper.on('click', '.js-remove', function(e) {
+            e.preventDefault()
+            $(this).closest('.vehicleOption-item')
+                .fadeOut()
+                .remove()
+        });        
+    });
+
+    </script>
+{% endblock %}

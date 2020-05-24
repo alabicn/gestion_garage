@@ -7,14 +7,14 @@
         <div class="p-2 w-100 bd-highlight">
         <h1>{{title}}</h1>
         </div>
-        <div class="p-2 flex-shrink-1 bd-highlight"><a href="{{ path('modele_add') }}" class="btn btn-outline-primary" role="button">Nouvelle voiture</a></div>
+        <div class="p-2 flex-shrink-1 bd-highlight"><a href="{{ path('voiture_add') }}" class="btn btn-outline-primary" role="button">Nouvelle voiture</a></div>
     </div>
     <div class="container-lg">  
     <table class="table table-hover">  
     {% set increment = 0 %}
         <thead>
             <tr class="table-primary">
-                <th scope="col">&#8470;</th>
+                <th scope="col" width="10%">&#8470;</th>
                 <th scope="col">Modèle</th>
                 <th scope="col">Garage</th>
                 <th scope="col">Immatriculation</th>
@@ -26,7 +26,7 @@
     {% for voiture in pagination %}
     {% set increment = increment + 1 %}
             <tr class="table-active">
-                <th scope="row" class="align-middle">{{ increment }}</td>
+                <th scope="row" class="align-middle" width="10%">{{ increment }}</td>
                 <td class="align-middle">{{ voiture.modele.marque.nom }} {{ voiture.modele.nom }}</td>
                 <td class="align-middle">{{ voiture.garage.nom }}</td>
                 <td class="align-middle">{{ voiture.immatriculation }}</td>
