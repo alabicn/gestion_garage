@@ -58,10 +58,25 @@ class VoitureController extends AbstractController
             $bonFormatImm = $this->serviceInformations->verificationImmatriculation($immatriculation);
 
             if ($bonFormatImm) {
-                $em = $this->getDoctrine()->getManager();
+                $em = $this->getDoctrine()->getManager();  
+                if (!$form['voitureOptions']->isEmpty()) {
+                    $prix = $form['prix']->getData();
+                    foreach($form['voitureOptions']->getData() as $voitureOption) {
+                        $prixOption = $voitureOption->getOption()->getPrix() * $voitureOption->getNombre();
+                        
+                        $prix += $prixOption;
+                    }
+                    $obj_voiture->setPrix($prix);
+                }
                 
+                $obj_voiture->setAVendre(false);              
+
+                $em->persist($obj_voiture);
+                $em->flush();
+                $this->addFlash('success', "La nouvelle voiture est ajoutée.");
+                return $this->redirectToRoute('voitures');
             } else {
-                $this->addFlash('error', "Le numéro d'immatriculation n'est pas au bon format");
+                $this->addFlash('error', "Le numéro d'immatriculation n'est pas au bon format.");
                 return $this->redirectToRoute('voiture_add');
             }
         }

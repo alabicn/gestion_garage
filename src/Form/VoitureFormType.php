@@ -14,7 +14,10 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+
 use Doctrine\ORM\EntityRepository;
 
 class VoitureFormType extends AbstractType
@@ -52,18 +55,48 @@ class VoitureFormType extends AbstractType
                 'placeholder' => 'Choisissez un garage',
             ])
             ->add('immatriculation', TextType::class, [
-                'help' => 'Le format est AA-001-AA',
+                'help' => 'Le numéro d\'immatriculation doit être au format AA-001-AA',
             ])
             ->add('dateFabrication', DateType::class, [
                 'widget' => 'single_text',
                 'input' => 'datetime_immutable',
+                'required' => false
             ])
-            ->add('kilometrage', IntegerType::class)
-            ->add('typeCarrosserie', TextType::class)
-            ->add('carburant', TextType::class)
-            ->add('nbPortes', IntegerType::class)
-            ->add('boiteDeVitesse', TextType::class)
-            ->add('prix', MoneyType::class)
+            ->add('kilometrage', IntegerType::class, [
+                'attr' => [
+                    'min' => 1
+                ],
+                'required' => false
+            ])
+            ->add('typeCarrosserie', TextType::class, [
+                'required' => false
+            ])
+            ->add('carburant', TextType::class, [
+                'required' => false
+            ])
+            ->add('nbPortes', ChoiceType::class, [
+                'choices' => [
+                    '3' => 3,
+                    '5' => 5,
+                    '7' => 7
+                ], 
+                'placeholder' => 'Choisissez un nombre',
+                'required' => false
+            ])
+            ->add('boiteDeVitesse', TextType::class, [
+                'required' => false
+            ])
+            ->add('voitureOptions', CollectionType::class, [
+                'entry_type'   => VoitureOptionFormType::class,
+                'allow_add'    => true,
+                'allow_delete' => true,
+                'label'        => false,
+                'by_reference' => false,
+                'required'     => false,
+            ])
+            ->add('prix', MoneyType::class, [
+                'required' => false
+            ])
             ->add('valider', SubmitType::class)
         ;
     }
