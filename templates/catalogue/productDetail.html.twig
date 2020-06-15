@@ -3,5 +3,25 @@
 {% block body %}
 <div class="container-sm">
     <h1>{{ title }}</h1>
+    <p><i class="fas fa-car"></i>{{ voiture.modele.marque.nom }} {{ voiture.modele.nom }}</p>
+    <p><i class="fas fa-euro-sign"></i>{{ voiture.prix|format_price }}</p>
+    <p><i class="far fa-calendar-alt"></i>{{ voiture.dateFabrication|local_date }}</p>
+    <p><i class="fas fa-tachometer-alt"></i>{{ voiture.kilometrage|format_km }}</p>
+    <p><i class="fas fa-gas-pump"></i>{{ voiture.carburant }}</p>
+    <p><i class="fas fa-map-marker-alt"></i>{{ voiture.garage.nom }}</p>
+    <p><i class="fas fa-key"></i>{{ voiture.nbPortes }}</p>
+    <p><i class="fas fa-car-alt"></i>{{ voiture.typeCarrosserie }}</p>
+    <div>
+        {% if voiture.voitureOptions|length > 0 %}<p><i class="fas fa-clipboard-list"></i>Options :</p>{% endif %}
+        {% for voitureOption in voiture.voitureOptions %}
+            <ul>
+                {% if voitureOption.nombre > 1 %}
+                <li>{{ voitureOption.option.title }}&nbsp;({{ voitureOption.nombre }})</li>
+                {% else %}
+                <li>{{ voitureOption.option.title }}</li>
+                {% endif %}
+            </ul>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

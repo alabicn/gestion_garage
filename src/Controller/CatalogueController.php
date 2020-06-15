@@ -181,9 +181,11 @@ class CatalogueController extends AbstractController
                 $options[] = $voitureOption->getNombre() > 1 ? $voitureOption->getOption()->getTitle()." (".$voitureOption->getNombre().") " : $voitureOption->getOption()->getTitle();
                 asort($options);
             }
+
+            $url_modele = "<a href='".$this->generateUrl('product_detailed', ['id' => $voiture->getId()])."' target=\"_blank\"'>".$voiture->getModele()->getMarque()->getNom()." ".$voiture->getModele()->getNom()."</a>";
         
             $arr_voitures[] = [
-                'modele' => $voiture->getModele()->getMarque()->getNom()." ".$voiture->getModele()->getNom(),
+                'modele' => $url_modele,
                 'garage' => $voiture->getGarage()->getNom(),
                 'annee' => !is_null($voiture->getDateFabrication()) ? $voiture->getDateFabrication()->format('Y') : "/",
                 'kilometrage' => !is_null($voiture->getKilometrage()) ? number_format($voiture->getKilometrage(), 0, '', ' ')." km" : "/",
@@ -193,7 +195,6 @@ class CatalogueController extends AbstractController
                 'portes' => !is_null($voiture->getNbPortes()) ? $voiture->getNbPortes() : "/",
                 'options' => !empty($options) ? implode("<br>", $options) : "/",
                 'prix' => !is_null($voiture->getPrix()) ? $this->serviceInformations->format_price($voiture->getPrix()) : "/"
-                //'url' => $this->generateUrl('product_detailed', ['id' => $voiture->getId()])
             ];
         }
 
