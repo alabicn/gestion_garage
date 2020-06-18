@@ -19,7 +19,7 @@ class HomeController extends AbstractController
     {
 
         $x = $this->getDoctrine()->getManager()->getRepository(Voiture::class)->findAllBoites();
-        dump($x);
+        //dump($x);
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
         ]);
