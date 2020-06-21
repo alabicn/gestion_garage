@@ -141,7 +141,7 @@
     <div class="row">
     {% for photo in voiture.photo %}     
         <div class="col-md-3 col-sm-6 mb-4">
-            <img id="img{{ photo.id }}" class="img-fluid img-modal" src="{{ asset('images/voiture_' ~ voiture.id ~ '/' ~ photo.srcPhoto) }}" alt="{{ photo.altPhoto }}" onclick="getModal({{ photo.id }})">
+            <img id="img{{ photo.id }}" class="img-fluid img-modal" src="{{ asset('images/' ~ photo.srcPhoto) }}" alt="{{ photo.altPhoto }}" onclick="getModal({{ photo.id }})">
         </div>
     {% endfor %}
     {% endif %}
@@ -154,7 +154,7 @@
 {% for photo in voiture.photo %}     
 <div id="myModal{{ photo.id }}" class="modal">
     <span id="span{{ photo.id }}" class="close">&times;</span>
-    <img class="modal-content" id="img{{ photo.id }}" src="{{ asset('images/voiture_' ~ voiture.id ~ '/' ~ photo.srcPhoto) }}" alt="{{ photo.altPhoto }}">
+    <img class="modal-content" id="img{{ photo.id }}" src="{{ asset('images/' ~ photo.srcPhoto) }}" alt="{{ photo.altPhoto }}">
 </div>
 {% endfor %}
 {% endif %}

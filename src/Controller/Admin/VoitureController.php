@@ -10,6 +10,7 @@ use App\Service\ServiceInformations;
 use Doctrine\ORM\EntityManagerInterface;
 
 use App\Entity\Voiture;
+use App\Entity\Photo;
 use App\Form\VoitureFormType;
 
 use Knp\Component\Pager\PaginatorInterface;
@@ -67,6 +68,63 @@ class VoitureController extends AbstractController
                         $prix += $prixOption;
                     }
                     $obj_voiture->setPrix($prix);
+                }
+
+                /** @var UploadedFile $imageFile */
+                $imageFile = $form->get('photoPrincipal')->getData();
+
+                // this condition is needed because the 'brochure' field is not required
+                // so the IMG file must be processed only when a file is uploaded
+                if ($imageFile) {
+                    
+                    // this is needed to safely include the file name as part of the URL
+                    $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $obj_voiture->getModele()->getNom());
+                    $newFilename = 'photoPrincipal_'.$safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+                    // Move the file to the directory where brochures are stored
+                    try { 
+                        $path = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $obj_voiture->getModele()->getMarque()->getNom());
+                        $imageFile->move(
+                            $this->getParameter('img_directory').$path,
+                            $newFilename
+                        );
+                        $obj_voiture->setSrcPhotoPrincipal($path."/".$newFilename);
+                        $obj_voiture->setAltPhotoPrincipal($obj_voiture->getModele()->getMarque()->getNom()." ".$obj_voiture->getModele()->getNom());
+                    } catch (FileException $e) {
+                        $this->addFlash("error", "Un problème est survenu lors de l'upload de l'image");
+                    }                
+                }
+
+                /** @var UploadedFile $imageFile */
+                $imageFiles = $form->get('photos')->getData();
+                
+
+                // this condition is needed because the 'brochure' field is not required
+                // so the IMG file must be processed only when a file is uploaded
+                if ($imageFiles) {
+                    foreach ($imageFiles as $imageFile) {
+                        
+                        $obj_photo = new Photo(); 
+                        // this is needed to safely include the file name as part of the URL
+                        $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $obj_voiture->getImmatriculation());
+                        $newFilename = 'photoAngle_'.$safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+                        // Move the file to the directory where brochures are stored
+                        try { 
+                            $path = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $obj_voiture->getModele()->getMarque()->getNom());
+                            $imageFile->move(
+                                $this->getParameter('img_directory').$path,
+                                $newFilename
+                            );
+                            $obj_photo->setSrcPhoto($path."/".$newFilename);
+                            $obj_photo->setAltPhoto($newFilename);
+                            $obj_photo->setVoiture($obj_voiture);
+
+                            $em->persist($obj_photo);
+                        } catch (FileException $e) {
+                            $this->addFlash("error", "Un problème est survenu lors de l'upload de l'image");
+                        }    
+                    }               
                 }
                 
                 $obj_voiture->setAVendre(false);              

@@ -15,7 +15,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 use Doctrine\ORM\EntityRepository;
@@ -96,6 +98,45 @@ class VoitureFormType extends AbstractType
             ])
             ->add('prix', MoneyType::class, [
                 'required' => false
+            ])
+            ->add('photoPrincipal', FileType::class, [
+                'label' => 'Photo principal de la voiture (JPG/PNG, max. 1Mo)',
+
+                // unmapped means that this field is not associated to any entity property
+                'mapped' => false,
+
+                // make it optional so you don't have to re-upload the PDF file
+                // every time you edit the Product details
+                'required' => false,
+
+                // unmapped fields can't define their validation using annotations
+                // in the associated entity, so you can use the PHP constraint classes
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png'
+                        ],
+                        'mimeTypesMessage' => 'Veuillez respecter les restrictions de taille et de format',
+                    ])
+                ],
+            ])
+            ->add('photos', FileType::class, [
+                'label' => 'Des photos divers de la voiture (JPG/PNG, max. 1Mo)',
+
+                // unmapped means that this field is not associated to any entity property
+                'mapped' => false,
+
+                // make it optional so you don't have to re-upload the PDF file
+                // every time you edit the Product details
+
+                'multiple' => true,
+                'data_class' => null,
+
+                // unmapped fields can't define their validation using annotations
+                // in the associated entity, so you can use the PHP constraint classes
+
             ])
             ->add('valider', SubmitType::class)
         ;
