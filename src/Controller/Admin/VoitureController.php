@@ -30,12 +30,12 @@ class VoitureController extends AbstractController
      */
     public function index(EntityManagerInterface $em, PaginatorInterface $paginator, Request $obj_request)
     {
-        $queryBuilder = $em->getRepository(Voiture::class)->getWithSearchQueryBuilder();
+        $queryBuilder = $em->getRepository(Voiture::class)->getWithSearchQueryBuilderAll();
 
         $pagination = $paginator->paginate(
             $queryBuilder, /* query NOT result */
             $obj_request->query->getInt('page', 1)/*page number*/,
-            20/*limit per page*/
+            50/*limit per page*/
         );
 
         $array['pagination'] = $pagination;
@@ -143,5 +143,43 @@ class VoitureController extends AbstractController
         $array['addVoitureForm'] = $form->createView();
 
         return $this->render('admin/voiture/addVoiture.html.twig', $array);
+    }
+
+    /**
+     * @Route("/voiture/edit/repare/{id}", name="edit_repare")
+     */
+    public function repareAction(Voiture $voiture, Request $obj_request) {
+
+        $em = $this->getDoctrine()->getManager();
+        $obj_voiture = $em->getRepository(Voiture::class)->find($voiture->getId());
+
+
+        $obj_voiture->setAVendre(false);
+        
+        $em->persist($obj_voiture);
+        $em->flush();
+
+        $this->addFlash('warning', $obj_voiture->getModele()->getMarque()->getNom()." ".$obj_voiture->getModele()->getNom()." est en réparation.");
+    
+        return $this->redirectToRoute('product_detailed', ['id' => $obj_voiture->getId()]);
+    }
+
+    /**
+     * @Route("/voiture/edit/sell/{id}", name="edit_sell")
+     */
+    public function sellAction(Voiture $voiture, Request $obj_request) {
+
+        $em = $this->getDoctrine()->getManager();
+        $obj_voiture = $em->getRepository(Voiture::class)->find($voiture->getId());
+
+
+        $obj_voiture->setAVendre(true);
+        
+        $em->persist($obj_voiture);
+        $em->flush();
+
+        $this->addFlash('success', $obj_voiture->getModele()->getMarque()->getNom()." ".$obj_voiture->getModele()->getNom()." est mis en catalogue");
+    
+        return $this->redirectToRoute('product_detailed', ['id' => $obj_voiture->getId()]);
     }
 }

@@ -28,11 +28,16 @@ class VoitureFixtures extends Fixture implements DependentFixtureInterface
         foreach ($arr_obj_modeles as $obj_modele) {
             for ($i = 0;$i <= rand(7, 10);$i++) {
 
+                $dateFabrication = $faker->dateTimeBetween('-10 years', '-2 years', 'Europe/Paris');
+                $cloneDateFabrication = clone $dateFabrication;
+                $dateVendu = $cloneDateFabrication->modify('+'.rand(1000, 3000).' days');
+
                 $obj_voiture = new Voiture();
                 $obj_voiture->setImmatriculation(chr(rand(65,90)).chr(rand(65,90))."-".rand(100,999)."-".chr(rand(65,90)).chr(rand(65,90)))
                             ->setDateFabrication($faker->dateTimeBetween('-10 years', '-2 years', 'Europe/Paris'))
                             ->setKilometrage(rand(50000,200000))
                             ->setAVendre(true)
+                            ->setEstVendue($dateVendu)
                             ->setTypeCarrosserie($carrosseries[rand(0,1)])
                             ->setCarburant($carburants[rand(0,2)])
                             ->setnbPortes($nbPortes[rand(0,2)])

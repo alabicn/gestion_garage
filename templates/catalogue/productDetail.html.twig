@@ -94,6 +94,13 @@
     <!-- Portfolio Item Heading -->
     <h1 class="my-4"><i class="fas fa-car"></i>
         <small>{{ voiture.modele.marque.nom }} {{ voiture.modele.nom }}</small>
+        {% if is_granted('ROLE_ADMIN') %}
+            {% if voiture.aVendre == true %}
+            <a href="{{ path('edit_repare', {'id': voiture.id}) }}" role="button" class="btn btn-danger btn-sm float-right align-middle">Mettre en réparation</a>
+            {% else %}
+            <a href="{{ path('edit_sell', {'id': voiture.id}) }}" role="button" class="btn btn-success btn-sm float-right align-middle">Mettre en catalogue</a>
+            {% endif %}
+        {% endif %}
     </h1>
     <!-- Portfolio Item Row -->
     <div class="row">

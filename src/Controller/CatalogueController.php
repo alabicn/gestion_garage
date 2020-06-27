@@ -58,10 +58,19 @@ class CatalogueController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $obj_voiture = $em->getRepository(Voiture::class)->find($voiture->getId());
 
-        $array['title'] = "Détails de ".$obj_voiture->getModele()->getMarque()->getNom()." ".$obj_voiture->getModele()->getNom();
-        $array['voiture'] = $obj_voiture;
+        $isAdmin = $this->isGranted('ROLE_ADMIN') ? true : false; 
 
-        return $this->render('catalogue/productDetail.html.twig', $array);
+        if((is_null($obj_voiture->getEstVendue()) && $obj_voiture->getAVendre()) || $isAdmin) {
+            
+            $array['title'] = "Détails de ".$obj_voiture->getModele()->getMarque()->getNom()." ".$obj_voiture->getModele()->getNom();
+            $array['voiture'] = $obj_voiture;
+    
+            return $this->render('catalogue/productDetail.html.twig', $array);
+        } else {
+            $array['title'] = "Voiture indisponible";
+            return $this->render('catalogue/productIndisponible.html.twig', $array);
+        }
+
     }
 
     /**

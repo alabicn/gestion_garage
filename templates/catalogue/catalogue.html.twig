@@ -15,27 +15,31 @@
     {% for voiture in pagination %}
         <div class="col-sm-4">
           <div class="card mb-3">
-            <h3 class="card-header">{{ voiture.modele.marque.nom }} {{ voiture.modele.nom }}</h3>
+            <h3 class="card-header">{% if voiture.modele.marque is defined and voiture.modele.marque.nom is not null  %}{{ voiture.modele.marque.nom }} {{ voiture.modele.nom }}{% else %}Information n'est pas disponible{% endif %}</h3>
             <div class="card-body">
-              <h5 class="card-title">{{ voiture.typeCarrosserie }}</h5>
-              <h6 class="card-subtitle text-muted">{{ voiture.carburant }}</h6>
+              <h5 class="card-title">{% if voiture.typeCarrosserie is defined and voiture.typeCarrosserie is not null %}{{ voiture.typeCarrosserie }}{% else %}Information n'est pas diponible{% endif %}</h5>
+              <h6 class="card-subtitle text-muted">{% if voiture.carburant is defined and voiture.carburant is not null %}{{ voiture.carburant }}{% else %}{% endif %}</h6>
             </div>
             <img style="height: 200px; width: 100%; display: block;" src={% if voiture.srcPhotoPrincipal is defined and voiture.srcPhotoPrincipal is not null %}"{{ asset('images/' ~ voiture.srcPhotoPrincipal) }}"{% else %}"data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22318%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20318%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_158bd1d28ef%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A16pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_158bd1d28ef%22%3E%3Crect%20width%3D%22318%22%20height%3D%22180%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22129.359375%22%20y%3D%2297.35%22%3EImage%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"{% endif %} alt={% if voiture.altPhotoPrincipal is defined and voiture.altPhotoPrincipal is not null %}"{{ voiture.altPhotoPrincipal }}"{% else %}"Card image"{% endif %}>
             <div class="card-body">
-              <p class="card-text">{{ voiture.garage.nom }}<span class="float-right badge badge-pill badge-success">Disponible</span></p>
+              <p class="card-text">{% if voiture.garage is not null and voiture.garage.nom is not null %}{{ voiture.garage.nom }}{% else %}Information n'est pas disponible{% endif %}</p>
             </div>
             <ul class="list-group list-group-flush">
-              <li class="list-group-item">{{ voiture.boiteDeVitesse }}</li>
-              <li class="list-group-item">{{ voiture.nbPortes }} portes</li>
-              <li class="list-group-item">{{ voiture.kilometrage|format_km }}</li>
+              <li class="list-group-item">{% if voiture.boiteDeVitesse is defined and voiture.boiteDeVitesse is not null %}{{ voiture.boiteDeVitesse }}{% else %}Information n'est pas disponible{% endif %}</li>
+              <li class="list-group-item">{% if voiture.nbPortes is defined and voiture.nbPortes is not null %}{{ voiture.nbPortes }} portes{% else %}Information n'est pas disponible{% endif %}</li>
+              <li class="list-group-item">{% if voiture.kilometrage is defined and voiture.kilometrage is not null %}{{ voiture.kilometrage|format_km }}{% else %}Information n'est pas disponible{% endif %}</li>
               <li class="list-group-item">{% for voitureOption in voiture.voitureOptions %}<span class="badge badge-pill badge-primary">{% if voitureOption.nombre > 1 %}{{ voitureOption.option.title }}&nbsp;({{ voitureOption.nombre }}){% else %}{{ voitureOption.option.title }}{% endif %}</span>&nbsp;{% endfor %}</li>
-              <li class="list-group-item text-success">{{ voiture.prix|format_price }}</li>
+              <li class="list-group-item text-success">{% if voiture.prix is defined and voiture.prix is not null %}{{ voiture.prix|format_price }}{% else %}Information n'est pas disponible{% endif %}</li>
             </ul>
             <div class="card-body">
                 <a href="{{ path('product_detailed', {'id': voiture.id}) }}" class="card-link"><strong>Plus d'info</strong></a>
             </div>
             <div class="card-footer text-muted">
+            {% if voiture.dateFabrication is defined and voiture.dateFabrication is not null %}
               Fabriquée en {{ voiture.dateFabrication|date('Y') }}
+            {% else %}
+            Information n'est pas disponible
+            {% endif %}
             </div>
           </div>
         </div>
