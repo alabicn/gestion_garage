@@ -147,6 +147,17 @@ class VoitureRepository extends ServiceEntityRepository
             ->leftJoin('modele.marque', 'marque')
             ->orderBy('marque.nom', 'ASC')
         ;
+    }
+    
+    public function getWithSearchQueryBuilderAll(): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('v');
+
+        return $qb
+            ->leftJoin('v.modele', 'modele')
+            ->leftJoin('modele.marque', 'marque')
+            ->orderBy('marque.nom', 'ASC')
+        ;
     } 
 
     public function findVoitureByCriteres($arr_criteres)

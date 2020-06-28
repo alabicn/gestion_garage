@@ -18,10 +18,8 @@ class HomeController extends AbstractController
     public function index(ServiceInformations $serviceInformations)
     {
 
-        $x = $this->getDoctrine()->getManager()->getRepository(Voiture::class)->findAllBoites();
-        dump($x);
-        return $this->render('home/index.html.twig', [
-            'controller_name' => 'HomeController',
-        ]);
+        //dump('test');
+        $array['title'] = 'Home';
+        return $this->render('home/index.html.twig', $array);
     }
 }

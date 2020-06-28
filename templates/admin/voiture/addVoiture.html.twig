@@ -34,6 +34,8 @@
         {% endfor %}
         </section>    
         {{ form_row(addVoitureForm.prix) }}
+        {{ form_row(addVoitureForm.photoPrincipal, {attr: {'placeholder': 'Sélectionnez une image'}}) }}
+        {{ form_row(addVoitureForm.photos, {attr: {'placeholder': 'Sélectionnez une ou plusieurs images'}}) }}
         {{ form_row(addVoitureForm.valider) }}
     {{ form_end(addVoitureForm) }}
 </div>

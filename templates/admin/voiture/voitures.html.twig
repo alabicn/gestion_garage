@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello VoitureController!{% endblock %}
+{% block title %}Voitures{% endblock %}
 
 {% block body %}
     <div class="d-flex bd-highlight">
@@ -27,7 +27,7 @@
     {% set increment = increment + 1 %}
             <tr class="table-active">
                 <th scope="row" class="align-middle" width="10%">{{ increment }}</td>
-                <td class="align-middle">{{ voiture.modele.marque.nom }} {{ voiture.modele.nom }}</td>
+                <td class="align-middle"><a href="{{ path('product_detailed', {'id': voiture.id}) }}">{{ voiture.modele.marque.nom }} {{ voiture.modele.nom }}</a></td>
                 <td class="align-middle">{{ voiture.garage.nom }}</td>
                 <td class="align-middle">{{ voiture.immatriculation }}</td>
                 <td class="align-middle">{{ voiture.dateFabrication|date('Y') }}</td>

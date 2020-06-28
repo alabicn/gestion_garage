@@ -1,7 +1,279 @@
 {% extends 'base.html.twig' %}
 {% block title %}{{title}}{% endblock %}
 {% block body %}
-<div class="container-sm">
-    <h1>{{ title }}</h1>
+<style>
+
+    #myImg {
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    }
+
+    #myImg:hover {opacity: 0.7;}
+
+    /* The Modal (background) */
+    .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+    }
+
+    /* Modal Content (image) */
+    .modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    }
+
+    /* Caption of Modal Image */
+    #caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 150px;
+    }
+
+    /* Add Animation */
+    .modal-content, #caption {  
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+    }
+
+    @-webkit-keyframes zoom {
+    from {-webkit-transform:scale(0)} 
+    to {-webkit-transform:scale(1)}
+    }
+
+    @keyframes zoom {
+    from {transform:scale(0)} 
+    to {transform:scale(1)}
+    }
+
+    /* The Close Button */
+    .close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    }
+
+    .close:hover,
+    .close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+    }
+
+    /* 100% Image Width on Smaller Screens */
+    @media only screen and (max-width: 700px){
+        .modal-content {
+            width: 100%;
+        }
+    }
+</style>
+<!-- Page Content -->
+<div class="container">
+    {% if is_granted('ROLE_ADMIN') %}
+    <div class="btn-group float-right" role="group" aria-label="Button group with nested dropdown">
+        <button type="button" class="btn btn-primary">Modifiations</button>
+        <div class="btn-group" role="group">
+            <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+            <div id="dropdown-menu2" class="dropdown-menu" aria-labelledby="btnGroupDrop1" style="">
+            {% if voiture.aVendre == true %}
+                <a href="{{ path('edit_repare', {'id': voiture.id}) }}" class="text-danger">Mettre en réparation</a>
+            {% else %}
+                <a href="{{ path('edit_sell', {'id': voiture.id}) }}" class="text-success">Mettre en catalogue</a>
+            {% endif %}
+            {% if voiture.estVendue is null %}
+                <a href="#Modal-date" class="text-info">Mettre en état vendu</a>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <!-- Portfolio Item Heading -->
+    <h1 class="my-4"><i class="fas fa-car"></i>
+        <small>{{ voiture.modele.marque.nom }} {{ voiture.modele.nom }}</small>
+    </h1>
+    <!-- Portfolio Item Row -->
+    <div class="row">
+        <div class="col-md-8">
+            <img class="img-fluid" src={% if voiture.srcPhotoPrincipal is defined and voiture.srcPhotoPrincipal is not null %}"{{ asset('images/' ~ voiture.srcPhotoPrincipal) }}"{% else %}"http://placehold.it/750x500"{% endif %} alt={% if voiture.altPhotoPrincipal is defined and voiture.altPhotoPrincipal is not null %}"{{ voiture.altPhotoPrincipal }}"{% else %}"Card image"{% endif %}>
+        </div>
+        <div class="col-md-4">
+            <h3 class="my-3"><i class="fas fa-info"></i>
+                <small>Détails :</small>
+            </h3>
+            <div class="d-flex justify-content-between">
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-car-alt h5"></i><span>&nbsp;{% if voiture.typeCarrosserie is defined and voiture.typeCarrosserie is not null %}{{ voiture.typeCarrosserie }}{% else %}inconnu{% endif %}</span></li>
+                    <li><i class="fas fa-tachometer-alt h5"></i><span>&nbsp;{% if voiture.kilometrage is defined and voiture.kilometrage is not null %}{{ voiture.kilometrage|format_km }}{% else %}inconnu{% endif %}</span></li>
+                    <li><i class="fas fa-calendar-alt h5"></i><span>&nbsp;{% if voiture.dateFabrication is defined and voiture.dateFabrication is not null %}{{ voiture.dateFabrication|local_date }}{% else %}inconnu{% endif %}</span></li>
+                    <li><i class="fas fa-cog h5"></i><span>&nbsp;{% if voiture.boiteDeVitesse is defined and voiture.boiteDeVitesse is not null %}{{ voiture.boiteDeVitesse }}{% else %}inconnu{% endif %}</span></li>
+                </ul>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-gas-pump h5"></i><span>&nbsp;{% if voiture.carburant is defined and voiture.carburant is not null %}{{ voiture.carburant }}{% else %}inconnu{% endif %}</span></li>
+                    <li><i class="fas fa-euro-sign h5"></i><span>&nbsp;{% if voiture.prix is defined and voiture.prix is not null %}{{ voiture.prix|format_price }}{% else %}inconnu{% endif %}</span></li>
+                    <li><i class="fas fa-map-marker-alt h5"></i><span>&nbsp;{% if voiture.garage is defined and voiture.garage is not null %}{{ voiture.garage.nom }}{% else %}inconnu{% endif %}</span></li>
+                    <li><i class="fas fa-key h5"></i><span>&nbsp;{% if voiture.nbPortes is defined and voiture.nbPortes is not null %}{{ voiture.nbPortes }}&nbsp;portes{% else %}inconnu{% endif %}</span></li>
+                </ul>
+            </div>
+            {% if voiture.voitureOptions|length > 0 %}
+            <h3 class="my-3"><i class="fas fa-clipboard-list"></i> 
+                <small>Options :</small>
+            </h3>
+            <ul>
+            {% for voitureOption in voiture.voitureOptions %}
+                {% if voitureOption.nombre > 1 %}
+                <li>{{ voitureOption.option.title }}&nbsp;({{ voitureOption.nombre }})</li>
+                {% else %}
+                <li>{{ voitureOption.option.title }}</li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+        <!-- /.row -->
+        <!-- Related Projects Row -->
+    {% if voiture.photo|length > 0 %}
+    <h3 class="my-4">Photos :</h3>
+    <div class="row">
+    {% for photo in voiture.photo %}     
+        <div class="col-md-3 col-sm-6 mb-4">
+            <img id="img{{ photo.id }}" class="img-fluid img-modal" src="{{ asset('images/' ~ photo.srcPhoto) }}" alt="{{ photo.altPhoto }}" onclick="getModal({{ photo.id }})">
+        </div>
+    {% endfor %}
+    {% endif %}
+    </div>
+    <!-- /.row -->
 </div>
+<!-- /.container -->
+<!-- The Modal -->
+{% if voiture.photo|length > 0 %}
+{% for photo in voiture.photo %}     
+<div id="myModal{{ photo.id }}" class="modal">
+    <span id="span{{ photo.id }}" class="close">&times;</span>
+    <img class="modal-content" id="img{{ photo.id }}" src="{{ asset('images/' ~ photo.srcPhoto) }}" alt="{{ photo.altPhoto }}">
+</div>
+{% endfor %}
+{% endif %}
+<!--modal date-->
+<div id="Modal-date" class="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Date de vente</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+            <label for="date-vente">Date de vente :</label>
+            <input type="date" id="date-vente" name="date-vente" min="{{ voiture.dateFabrication|date('Y-m-d') }}">
+            <div class="modal-footer">
+                <button id="save" type="submit" class="btn btn-primary">Enregistrer</button>
+                <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script>
+
+    function getModal(param) {
+        
+        var idModal = "myModal"+param;
+        var getImg = "img"+param;
+        
+        // get the modal
+        var modal = document.getElementById(idModal);
+        var img = document.getElementById(getImg);
+        var modalImg = $(getImg);
+        modal.style.display = "block";
+        var newSrc = img.src;
+        modalImg.attr('src', newSrc);
+
+         // Get the <span> element that closes the modal
+        spanId = "span"+param;
+        var span = document.getElementById(spanId);
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+    }
+
+    $(document).ready(function(){
+        $('#btnGroupDrop1').click(function () {
+            
+            $('#dropdown-menu2').toggle();
+        })
+
+        $('a[href$="#Modal-date"]').on( "click", function() {
+            $('#Modal-date').show();
+            $('#dropdown-menu2').hide();
+        });
+
+        $('#close').on( "click", function() {
+            $('#Modal-date').hide();
+        });
+
+        $('#save').on( "click", function() {
+            $('#Modal-date').hide();
+        });
+
+        var datePickerId = document.getElementById('date-vente');
+        today = new Date().toISOString().split("T")[0];
+        datePickerId.setAttribute("max", today);
+
+        $(function () {
+
+        $('form').on('submit', function (e) {
+
+            e.preventDefault();
+
+            $.ajax({
+                type: 'post',
+                url: "{{ path('edit_date_sell', {'id': voiture.id}) }}",
+                data: $('form').serialize(),
+                success: function (result) {
+                    if(result.ok) 
+                        alert('La date a été soumise.');
+                    else 
+                        alert('Une erreur rencontrée');
+                }
+            });
+
+        });
+
+      });
+
+
+    });
+
+</script>
 {% endblock %}

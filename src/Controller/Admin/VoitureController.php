@@ -10,9 +10,12 @@ use App\Service\ServiceInformations;
 use Doctrine\ORM\EntityManagerInterface;
 
 use App\Entity\Voiture;
+use App\Entity\Photo;
 use App\Form\VoitureFormType;
 
 use Knp\Component\Pager\PaginatorInterface;
+
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /** @Route("/admin") */
 class VoitureController extends AbstractController
@@ -29,12 +32,12 @@ class VoitureController extends AbstractController
      */
     public function index(EntityManagerInterface $em, PaginatorInterface $paginator, Request $obj_request)
     {
-        $queryBuilder = $em->getRepository(Voiture::class)->getWithSearchQueryBuilder();
+        $queryBuilder = $em->getRepository(Voiture::class)->getWithSearchQueryBuilderAll();
 
         $pagination = $paginator->paginate(
             $queryBuilder, /* query NOT result */
             $obj_request->query->getInt('page', 1)/*page number*/,
-            20/*limit per page*/
+            50/*limit per page*/
         );
 
         $array['pagination'] = $pagination;
@@ -68,6 +71,63 @@ class VoitureController extends AbstractController
                     }
                     $obj_voiture->setPrix($prix);
                 }
+
+                /** @var UploadedFile $imageFile */
+                $imageFile = $form->get('photoPrincipal')->getData();
+
+                // this condition is needed because the 'brochure' field is not required
+                // so the IMG file must be processed only when a file is uploaded
+                if ($imageFile) {
+                    
+                    // this is needed to safely include the file name as part of the URL
+                    $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $obj_voiture->getModele()->getNom());
+                    $newFilename = 'photoPrincipal_'.$safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+                    // Move the file to the directory where brochures are stored
+                    try { 
+                        $path = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $obj_voiture->getModele()->getMarque()->getNom());
+                        $imageFile->move(
+                            $this->getParameter('img_directory').$path,
+                            $newFilename
+                        );
+                        $obj_voiture->setSrcPhotoPrincipal($path."/".$newFilename);
+                        $obj_voiture->setAltPhotoPrincipal($obj_voiture->getModele()->getMarque()->getNom()." ".$obj_voiture->getModele()->getNom());
+                    } catch (FileException $e) {
+                        $this->addFlash("error", "Un problème est survenu lors de l'upload de l'image");
+                    }                
+                }
+
+                /** @var UploadedFile $imageFile */
+                $imageFiles = $form->get('photos')->getData();
+                
+
+                // this condition is needed because the 'brochure' field is not required
+                // so the IMG file must be processed only when a file is uploaded
+                if ($imageFiles) {
+                    foreach ($imageFiles as $imageFile) {
+                        
+                        $obj_photo = new Photo(); 
+                        // this is needed to safely include the file name as part of the URL
+                        $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $obj_voiture->getImmatriculation());
+                        $newFilename = 'photoAngle_'.$safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+                        // Move the file to the directory where brochures are stored
+                        try { 
+                            $path = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $obj_voiture->getModele()->getMarque()->getNom());
+                            $imageFile->move(
+                                $this->getParameter('img_directory').$path,
+                                $newFilename
+                            );
+                            $obj_photo->setSrcPhoto($path."/".$newFilename);
+                            $obj_photo->setAltPhoto($newFilename);
+                            $obj_photo->setVoiture($obj_voiture);
+
+                            $em->persist($obj_photo);
+                        } catch (FileException $e) {
+                            $this->addFlash("error", "Un problème est survenu lors de l'upload de l'image");
+                        }    
+                    }               
+                }
                 
                 $obj_voiture->setAVendre(false);              
 
@@ -86,4 +146,65 @@ class VoitureController extends AbstractController
 
         return $this->render('admin/voiture/addVoiture.html.twig', $array);
     }
+
+    /**
+     * @Route("/voiture/edit/repare/{id}", name="edit_repare")
+     */
+    public function repareAction(Voiture $voiture, Request $obj_request) {
+
+        $em = $this->getDoctrine()->getManager();
+        $obj_voiture = $em->getRepository(Voiture::class)->find($voiture->getId());
+
+
+        $obj_voiture->setAVendre(false);
+        
+        $em->persist($obj_voiture);
+        $em->flush();
+
+        $this->addFlash('warning', $obj_voiture->getModele()->getMarque()->getNom()." ".$obj_voiture->getModele()->getNom()." est en réparation.");
+    
+        return $this->redirectToRoute('product_detailed', ['id' => $obj_voiture->getId()]);
+    }
+
+    /**
+     * @Route("/voiture/edit/sell/{id}", name="edit_sell")
+     */
+    public function sellAction(Voiture $voiture, Request $obj_request) {
+
+        $em = $this->getDoctrine()->getManager();
+        $obj_voiture = $em->getRepository(Voiture::class)->find($voiture->getId());
+
+
+        $obj_voiture->setAVendre(true);
+        
+        $em->persist($obj_voiture);
+        $em->flush();
+
+        $this->addFlash('success', $obj_voiture->getModele()->getMarque()->getNom()." ".$obj_voiture->getModele()->getNom()." est mis en catalogue");
+    
+        return $this->redirectToRoute('product_detailed', ['id' => $obj_voiture->getId()]);
+    }
+
+    /**
+     * @Route("/voiture/edit/sell/date/{id}", name="edit_date_sell")
+     */
+    public function sellDateAction(Voiture $voiture, Request $obj_request) {
+
+        $em = $this->getDoctrine()->getManager();
+        $obj_voiture = $em->getRepository(Voiture::class)->find($voiture->getId());
+
+        $str_dateVente = $obj_request->request->get('date-vente');
+        $obj_dateVente = new \DateTime($str_dateVente);
+
+        $obj_voiture->setAVendre(false)
+                    ->setEstVendue($obj_dateVente);
+        
+        $em->persist($obj_voiture);
+        $em->flush();
+    
+        return new JsonResponse([
+            'ok' => true
+        ]);
+    }
+
 }

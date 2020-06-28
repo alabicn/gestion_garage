@@ -45,7 +45,7 @@ class VendeurFixtures extends Fixture
                             ->setGarage($garage)
                             ->setEmail(strtolower($this->serviceInformations->replaceAccent($str_prenom)).".".strtolower($this->serviceInformations->replaceAccent($str_nom))."@gmail.com")
                             ->setPseudo(strtolower($this->serviceInformations->replaceAccent($str_prenom[0])).".".strtolower($this->serviceInformations->replaceAccent($str_nom)))
-                            ->setPassword($this->encoder->encodePassword($obj_vendeur, $str_nom."1234"))
+                            ->setPassword($this->encoder->encodePassword($obj_vendeur, strtolower($this->serviceInformations->replaceAccent($str_nom))."1234"))
                             ->setRoles(['ROLE_USER'])
                             ->setNeedRGPD($faker->dateTimeThisDecade('now', null))
                             ->setEstActive(true);
