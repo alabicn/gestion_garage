@@ -20,7 +20,6 @@ security:
                     - App\Security\LoginFormAuthenticator
             logout:
                 path: app_logout
-                # where to redirect after logout
                 target: home
            
 

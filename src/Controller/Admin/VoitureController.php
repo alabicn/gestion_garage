@@ -16,6 +16,8 @@ use App\Form\VoitureFormType;
 use Knp\Component\Pager\PaginatorInterface;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /** @Route("/admin") */
 class VoitureController extends AbstractController
@@ -194,17 +196,29 @@ class VoitureController extends AbstractController
         $obj_voiture = $em->getRepository(Voiture::class)->find($voiture->getId());
 
         $str_dateVente = $obj_request->request->get('date-vente');
-        $obj_dateVente = new \DateTime($str_dateVente);
 
-        $obj_voiture->setAVendre(false)
-                    ->setEstVendue($obj_dateVente);
+        if ($str_dateVente != null || $str_dateVente != '') {
+
+            $obj_dateVente = new \DateTime($str_dateVente);
+
+            $obj_voiture->setAVendre(false)
+                        ->setEstVendue($obj_dateVente);
+            
+            $em->persist($obj_voiture);
+            $em->flush();
         
-        $em->persist($obj_voiture);
-        $em->flush();
-    
-        return new JsonResponse([
-            'ok' => true
-        ]);
+
+            return new JsonResponse([
+                'ok' => true
+            ]);
+        } else {
+
+            return new JsonResponse([
+                'ok' => false
+            ]);
+
+        }
+            
     }
 
 }

@@ -124,7 +124,7 @@ class GarageController extends AbstractController
         $em->persist($obj_garage);
         $em->flush();
 
-        $this->addFlash('info', $obj_garage->getNom()." est maintenant ouverte");
+        $this->addFlash('info', $obj_garage->getNom()." est maintenant ouvert");
 
         return $this->redirectToRoute('garages');
     }
@@ -142,7 +142,7 @@ class GarageController extends AbstractController
         $em->persist($obj_garage);
         $em->flush();
 
-        $this->addFlash('warning', $obj_garage->getNom()." est maintenant fermée");
+        $this->addFlash('warning', $obj_garage->getNom()." est maintenant fermé");
 
         return $this->redirectToRoute('garages');
     }

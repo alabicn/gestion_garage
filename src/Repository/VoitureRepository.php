@@ -145,7 +145,7 @@ class VoitureRepository extends ServiceEntityRepository
             ->setParameter('a_vendre', true)
             ->leftJoin('v.modele', 'modele')
             ->leftJoin('modele.marque', 'marque')
-            ->orderBy('marque.nom', 'ASC')
+            ->orderBy('modele.id', 'ASC')
         ;
     }
     
