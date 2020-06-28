@@ -31,7 +31,7 @@
                 <td class="align-middle">{{ voiture.garage.nom }}</td>
                 <td class="align-middle">{{ voiture.immatriculation }}</td>
                 <td class="align-middle">{{ voiture.dateFabrication|date('Y') }}</td>
-                <td class="align-middle">{% if voiture.aVendre == true %}<span class="badge badge-pill badge-success">Disponible</span>{% else %}<span class="badge badge-pill badge-warning">En réparation</span>{% endif %}</td>
+                <td class="align-middle">{% if voiture.aVendre == true %}<span class="badge badge-pill badge-success">Disponible</span>{% elseif voiture.aVendre == false and voiture.estVendue is not null %}<span class="badge badge-pill badge-info">Vendue</span>{% else %}<span class="badge badge-pill badge-warning">En réparation</span>{% endif %}</td>
             </tr>
     {% endfor %}
         </tbody>

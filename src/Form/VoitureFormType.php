@@ -79,8 +79,7 @@ class VoitureFormType extends AbstractType
             ->add('nbPortes', ChoiceType::class, [
                 'choices' => [
                     '3' => 3,
-                    '5' => 5,
-                    '7' => 7
+                    '5' => 5
                 ], 
                 'placeholder' => 'Choisissez un nombre',
                 'required' => false
@@ -132,6 +131,7 @@ class VoitureFormType extends AbstractType
                 // every time you edit the Product details
 
                 'multiple' => true,
+                'required' => false,
                 'data_class' => null,
 
                 // unmapped fields can't define their validation using annotations

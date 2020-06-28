@@ -73,7 +73,11 @@
             $(this).closest('.vehicleOption-item')
                 .fadeOut()
                 .remove()
-        });        
+        });   
+
+        var datePickerId = document.getElementById('voiture_form_dateFabrication');
+        today = new Date().toISOString().split("T")[0];
+        datePickerId.setAttribute("max", today);     
     });
 
     </script>
