@@ -23,8 +23,8 @@
                         </li>
                     {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="true">Espace admin</a>
-                            <div class="dropdown-menu" style="position: absolute; transform: translate3d(0px, 37px, 0px); top: 0px; left: 0px; will-change: transform;" x-placement="bottom-start">
+                            <a id="dropdown-toggle1" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="true">Espace admin</a>
+                            <div id="dropdown-menu1" class="dropdown-menu" style="position: absolute; transform: translate3d(0px, 37px, 0px); top: 0px; left: 0px; will-change: transform;" x-placement="bottom-start">
                                 {% if is_granted('ROLE_SUPER_ADMIN') %}<a class="dropdown-item" href="{{ path('garages') }}">Garages</a>{% endif %}
                                 <a class="dropdown-item" href="{{ path('marques') }}">Marques</a>
                                 <a class="dropdown-item" href="{{ path('modeles') }}">Modeles</a>
@@ -101,9 +101,9 @@
             <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.js"></script>
             <script>
             $(document).ready(function(){
-                $('.dropdown-toggle').click(function () {
+                $('#dropdown-toggle1').click(function () {
                     
-                    $('.dropdown-menu').toggle();
+                    $('#dropdown-menu1').toggle();
                 })
             });
             </script>

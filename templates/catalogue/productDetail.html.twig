@@ -91,16 +91,27 @@
 </style>
 <!-- Page Content -->
 <div class="container">
+    {% if is_granted('ROLE_ADMIN') %}
+    <div class="btn-group float-right" role="group" aria-label="Button group with nested dropdown">
+        <button type="button" class="btn btn-primary">Modifiations</button>
+        <div class="btn-group" role="group">
+            <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+            <div id="dropdown-menu2" class="dropdown-menu" aria-labelledby="btnGroupDrop1" style="">
+            {% if voiture.aVendre == true %}
+                <a href="{{ path('edit_repare', {'id': voiture.id}) }}" class="text-danger">Mettre en réparation</a>
+            {% else %}
+                <a href="{{ path('edit_sell', {'id': voiture.id}) }}" class="text-success">Mettre en catalogue</a>
+            {% endif %}
+            {% if voiture.estVendue is null %}
+                <a href="#Modal-date" class="text-info">Mettre en état vendu</a>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
     <!-- Portfolio Item Heading -->
     <h1 class="my-4"><i class="fas fa-car"></i>
         <small>{{ voiture.modele.marque.nom }} {{ voiture.modele.nom }}</small>
-        {% if is_granted('ROLE_ADMIN') %}
-            {% if voiture.aVendre == true %}
-            <a href="{{ path('edit_repare', {'id': voiture.id}) }}" role="button" class="btn btn-danger btn-sm float-right align-middle">Mettre en réparation</a>
-            {% else %}
-            <a href="{{ path('edit_sell', {'id': voiture.id}) }}" role="button" class="btn btn-success btn-sm float-right align-middle">Mettre en catalogue</a>
-            {% endif %}
-        {% endif %}
     </h1>
     <!-- Portfolio Item Row -->
     <div class="row">
@@ -165,6 +176,29 @@
 </div>
 {% endfor %}
 {% endif %}
+<!--modal date-->
+<div id="Modal-date" class="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Date de vente</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+            <label for="date-vente">Date de vente :</label>
+            <input type="date" id="date-vente" name="date-vente" min="{{ voiture.dateFabrication|date('Y-m-d') }}">
+            <div class="modal-footer">
+                <button id="save" type="submit" class="btn btn-primary">Enregistrer</button>
+                <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 {% block javascripts %}
 {{ parent() }}
@@ -192,6 +226,54 @@
             modal.style.display = "none";
         }
     }
+
+    $(document).ready(function(){
+        $('#btnGroupDrop1').click(function () {
+            
+            $('#dropdown-menu2').toggle();
+        })
+
+        $('a[href$="#Modal-date"]').on( "click", function() {
+            $('#Modal-date').show();
+            $('#dropdown-menu2').hide();
+        });
+
+        $('#close').on( "click", function() {
+            $('#Modal-date').hide();
+        });
+
+        $('#save').on( "click", function() {
+            $('#Modal-date').hide();
+        });
+
+        var datePickerId = document.getElementById('date-vente');
+        today = new Date().toISOString().split("T")[0];
+        datePickerId.setAttribute("max", today);
+
+        $(function () {
+
+        $('form').on('submit', function (e) {
+
+            e.preventDefault();
+
+            $.ajax({
+                type: 'post',
+                url: "{{ path('edit_date_sell', {'id': voiture.id}) }}",
+                data: $('form').serialize(),
+                success: function (result) {
+                    if(result.ok) 
+                        alert('La date a été soumise.');
+                    else 
+                        alert('Une erreur rencontrée');
+                }
+            });
+
+        });
+
+      });
+
+
+    });
 
 </script>
 {% endblock %}
